@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 #데이터베이스 OID 및 환경 값
 
-DB_HOST = '192.168.0.2' #DB서버위치
+DB_HOST = '192.168.0.90' #DB서버위치
 DB_PORT= 3306
 #DB접속에 필요한 정보
 DB_USER='SNA'
 DB_PASSWD='smart123'
 DB_NAME='SNA'
 #SNMP정보를 가져올 주소 및 커뮤니티 ,포트
-SNMP_TARGET='192.168.0.8'
+SNMP_TARGET='192.168.0.101'
 SNMP_COMMUNITY='smart123'
 SNMP_PORT='161'
 
