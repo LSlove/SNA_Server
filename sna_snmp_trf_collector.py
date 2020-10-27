@@ -177,12 +177,12 @@ class SnaSnmpTrfCollector(object):
 
 
 def main():
-    print('START dml_snmp_trf_collector Process!!!')
+    print('START Sna_snmp_trf_collector Process!!!')
     mysql_exec = sqlExec(cfg.DB_HOST, cfg.DB_USER, cfg.DB_PASSWD, cfg.DB_NAME)
 
     if mysql_exec.conn_db is False:
         print("Can't connect database : check environmnet of database!!!")
-        print('END dml_snmp_trf_collector Process!!!')
+        print('END Sna_snmp_trf_collector Process!!!')
         return
     
     trf_collector = SnaSnmpTrfCollector()
@@ -198,8 +198,6 @@ def main():
                     target[1],
                     cfg.SNMP_COLLECT_OIDS_DICT.values(),
                     cfg.SNMP_COUNT_OID
-                    # int(target[3]),
-                    # target[2]
             )
             print("snmp_data = ")
             print(snmp_data)

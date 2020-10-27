@@ -1,16 +1,10 @@
 # -*- coding: utf-8 -*-
 
-"""
-Created    : 2012. 11. 27
-Programmer : bugslayer
-Purpose    : MySQL (MariaDB)의 DB 연결 및 쿼리 실행을 수행한다.
-"""
-
 #import MySQLdb
 import pymysql
 import traceback
 
-class DmlMySql(object):
+class SnaMySql(object):
     def __init__(self, host, user, passwd, db_name, port=3306, charset='utf-8', unicode=True):
         self.host 	= host
         self.user 	= user
@@ -26,7 +20,7 @@ class DmlMySql(object):
         try :
             self.close_db()
         except Exception as e :
-            print ("DmlMySql:__del__ : Exception Occur - ", e)
+            print ("SnaMySql:__del__ : Exception Occur - ", e)
             return
 
 
@@ -41,7 +35,7 @@ class DmlMySql(object):
             traceback.print_exc()
             return False
         except Exception as e :
-            print ("DmlMySql :_connectDB() :  Exception Occur - ", e)
+            print ("SnaMySql :_connectDB() :  Exception Occur - ", e)
             traceback.print_exc()
             return False
 
@@ -54,7 +48,7 @@ class DmlMySql(object):
                 self.db.close()
                 self.db = None
         except Exception as e :
-            print ("DmlMySql:close_db() : Exception Occur - ", e)
+            print ("SnaMySql:close_db() : Exception Occur - ", e)
             print ("DB = ", self.db_name)
             return
 
@@ -64,7 +58,7 @@ class DmlMySql(object):
             if self.conn_db :
                 return self.db.cursor()
         except Exception as e :
-            print ("DmlMySql:open_cursor() : Exception Occur - ", e)
+            print ("SnaMySql:open_cursor() : Exception Occur - ", e)
             return
 
 
@@ -72,7 +66,7 @@ class DmlMySql(object):
         try :
             cursor.close()
         except Exception as e :
-            print ("DmlMySql:close_cursor() : Exception Occur - ", e)
+            print ("SnaMySql:close_cursor() : Exception Occur - ", e)
             return
 
 
@@ -80,7 +74,7 @@ class DmlMySql(object):
         try :
             self.db.commit()
         except Exception as e :
-            print ("DmlMySql:commit() : Exception Occur - ", e)
+            print ("SnaMySql:commit() : Exception Occur - ", e)
             return
 
 
@@ -88,7 +82,7 @@ class DmlMySql(object):
         try :
             self.db.rollback()
         except Exception as e :
-            print ("DmlMySql:rollback() : Exception Occur - ", e)
+            print ("SnaMySql:rollback() : Exception Occur - ", e)
             return
 
 
@@ -103,12 +97,12 @@ class DmlMySql(object):
             return rows
 
         except Exception as e :
-            print ("DmlMySql : exec_sql() : Exception Occur - ", e)
+            print ("SnaMySql : exec_sql() : Exception Occur - ", e)
             self.close_cursor(cursor)
             return False
 
 
-    def exec_dml(self, sql) :
+    def exec_Sna(self, sql) :
         try:
 
             row_count = -1
@@ -122,7 +116,7 @@ class DmlMySql(object):
             return row_count
 
         except Exception as e :
-            print ("DmlMySql : exec_dml_sql() : Exception Occur - ", e)
+            print ("SnaMySql : exec_Sna_sql() : Exception Occur - ", e)
             self.close_cursor(cursor)
             return False
 
@@ -137,12 +131,12 @@ class DmlMySql(object):
             return rows
 
         except Exception as e :
-            print ("DmlMySql : exec_sql_var() : Exception Occur - ", e)
+            print ("SnaMySql : exec_sql_var() : Exception Occur - ", e)
             self.close_cursor(cursor)
             return False
 
 
-    def exec_dml_var(self, sql, *arg_list) :
+    def exec_Sna_var(self, sql, *arg_list) :
         try:
             row_count = -1
 
@@ -155,12 +149,12 @@ class DmlMySql(object):
 
             return row_count
         except Exception as e :
-            print ("DmlMySql : exec_dml_sql_var() : Exception Occur - ", e)
+            print ("SnaMySql : exec_Sna_sql_var() : Exception Occur - ", e)
             self.close_cursor(cursor)
             return False
 
 
-    def exec_many_dml(self, sql, rows) :
+    def exec_many_Sna(self, sql, rows) :
         try:
             row_count = -1
 
@@ -173,7 +167,7 @@ class DmlMySql(object):
             return row_count
 
         except Exception as e :
-            print ("DmlMySql : exec_many_dml_sql() : Exception Occur - ", e)
+            print ("SnaMySql : exec_many_Sna_sql() : Exception Occur - ", e)
             print ("Query = ", sql)
             print ("Error Data = ", rows)
             self.close_cursor(cursor)
@@ -186,7 +180,7 @@ class DmlMySql(object):
         try :
             sql = "TRUNCATE TABLE %s " % (tbl_name)
             print ("SQL = %s " % sql)
-            ret = self.exec_dml_sql(sql)
+            ret = self.exec_Sna_sql(sql)
 
             return ret
         except Exception as e :
@@ -203,7 +197,7 @@ class DmlMySql(object):
                 """ % (from_name, to_name)
             print ("SQL = ", sql)
 
-            self.exec_dml_sql(sql)
+            self.exec_Sna_sql(sql)
 
         except Exception as e :
             print ("rename_table() : Exception Occur - ", e)
@@ -215,7 +209,7 @@ class DmlMySql(object):
 
             sql = "DROP TABLE %s " % (tbl_name)
             print ("SQL = %s " % sql)
-            ret = self.exec_dml_sql(sql)
+            ret = self.exec_Sna_sql(sql)
 
             return ret
         except Exception as e :
@@ -227,7 +221,7 @@ class DmlMySql(object):
         try :
             sql = "DROP INDEX %s " % (idx_name)
             print ("SQL = %s " % sql)
-            ret = self.exec_dml_sql(sql)
+            ret = self.exec_Sna_sql(sql)
 
             return ret
         except Exception as e :
@@ -244,7 +238,7 @@ class DmlMySql(object):
                 sql = "ALTER TABLE %s DISABLE KEYS " % (tbl_name)
 
             print ("SQL = %s " % sql)
-            ret = self.exec_dml_sql(sql)
+            ret = self.exec_Sna_sql(sql)
 
             return ret
         except Exception as e :
@@ -268,13 +262,13 @@ class DmlMySql(object):
                 sql_fk 			= "SET foreign_key_checks = 1 "
                 sql_session 	= "SET SESSION tx_isolation='READ-REPEATABLE' "
 
-            ret1 = self.exec_dml_sql(sql_commit)
-            ret2 = self.exec_dml_sql(sql_unique)
-            ret3 = self.exec_dml_sql(sql_fk)
+            ret1 = self.exec_Sna_sql(sql_commit)
+            ret2 = self.exec_Sna_sql(sql_unique)
+            ret3 = self.exec_Sna_sql(sql_fk)
             if sql_commit_exec is not None :
-                ret4 = self.exec_dml_sql(sql_commit_exec)
+                ret4 = self.exec_Sna_sql(sql_commit_exec)
 
-            ret5 = self.exec_dml_sql(sql_session)
+            ret5 = self.exec_Sna_sql(sql_session)
 
             return True
         except Exception as e :
