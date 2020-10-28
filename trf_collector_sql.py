@@ -1,12 +1,5 @@
 # -*- coding: utf-8 -*-
 
-"""
-Created    : 2019. 11. 26
-Programmer : bugslayer
-Purpose    : SNMP 수집 프로세스의 DB Query 처리를 위한 라이브러리
-
-"""
-
 import sys
 import traceback
 import base64
