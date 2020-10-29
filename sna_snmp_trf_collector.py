@@ -11,6 +11,9 @@ from sna_snmp import SnaSnmp as snmp
 from trf_collector_sql import TrfCollectorSql as sqlExec
 import SNA_config as cfg
 
+import threading
+import time
+
 class SnaSnmpTrfCollector(object):
     def __init__(self):
         self.snmp = snmp()
@@ -222,6 +225,8 @@ def main():
         except Exception as e:
             print(e)
             continue
+
+    threading.Timer(60, main).start()
 
             
 
