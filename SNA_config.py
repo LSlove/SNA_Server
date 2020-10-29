@@ -13,6 +13,12 @@ SNMP_COMMUNITY='smart123'
 SNMP_PORT='161'
 
 SNMP_COLLECT_OIDS=[
+    #Equipment
+    ' .1.3.6.1.2.1.4.20.1.1',# ipAdEntAddr
+    '.1.3.6.1.2.1.1.5', #sysName
+    '.1.3.6.1.2.1.1.1', #sysDescr
+    '.1.3.6.1.2.1.1.6', #sysLocation
+
     #Information
     '.1.3.6.1.2.1.2.2.1.1',         # ifIndex
     '.1.3.6.1.2.1.31.1.1.1.4',      # ifName
@@ -37,6 +43,12 @@ SNMP_COLLECT_OIDS=[
 ]
 
 SNMP_COLLECT_OIDS_DICT = {
+    #Equipment
+    'ipAdEntAddr':'.1.3.6.1.2.1.4.20.1.1',
+    'sysDescr':'.1.3.6.1.2.1.1.1',
+    'sysName' :'.1.3.6.1.2.1.1.5',
+    'sysLocation':'.1.3.6.1.2.1.1.6',
+    
     #Information
     'ifIndex':'.1.3.6.1.2.1.2.2.1.1',
     'ifName':'.1.3.6.1.2.1.31.1.1.1.4', 
@@ -65,6 +77,15 @@ def GET_OIDNAME(oid):
     for k, v in SNMP_COLLECT_OIDS_DICT.items():
         if oid == v:
             return k
+
+#이름으로 코드을 알아내는 함수
+def GET_OID(name):
+    for k, v in SNMP_COLLECT_OIDS_DICT.items():
+        if name == k:
+            return v
+            
+            
+            
 
 SNMP_COUNT_OID = '1.3.6.1.2.1.2.1.0'
 
