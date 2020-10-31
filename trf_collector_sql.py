@@ -47,3 +47,62 @@ class TrfCollectorSql(SnaMySql) :
             msg = '%s' % str(traceback.print_exc())
             print (msg)
             return row_count
+
+    def save_if_list(self, snmp_if_dict):
+        row_count = -1
+        try :
+            # sql = """
+            #     insert into Interface
+            #     (eq_ip,if_index,name, 
+            #     alias,descr,speed,admin_status,oper_status)
+            #     values
+            #     (%(IP)s,%(IF_INDEX)s,%(IF_NAME)s,%(IF_ALIAS)s,
+            #     %(IF_DESCR)s, %(IF_SPEED)s, %(ADMIN_STATUS)s, %(OPER_STATUS)s)
+            #     on duplicate key update
+            #     name=%(IF_NAME)s, alias=%(IF_ALIAS)s,
+            #     descr=%(IF_DESCR)s,speed=%(IF_SPEED)s,
+            #     admin_status=%(ADMIN_STATUS)s,oper_status=%(OPER_STATUS)s
+            # """
+
+            sql = """
+                insert into Interface
+                (eq_ip,if_index,name, 
+                alias,descr,speed,admin_status,oper_status)
+                values
+                (%(IP)s,%(IF_INDEX)s,%(IF_NAME)s,%(IF_ALIAS)s,
+                %(IF_DESCR)s, %(IF_SPEED)s, %(ADMIN_STATUS)s, %(OPER_STATUS)s)
+            """
+            row_count = self.exec_many_Sna(sql, snmp_if_dict)
+            return row_count
+
+        except Exception as e :
+            print ("save_if() : Exception Occur -  ", e)
+            msg = '%s' % str(traceback.print_exc())
+            print (msg)
+
+            return -1
+
+
+    def update_if_list(self, snmp_if_dict):
+        row_count = -1
+        try :
+            sql = """
+                update Interface
+                set name=%(IF_NAME)s, 
+                alias=%(IF_ALIAS)s,
+                descr=%(IF_DESCR)s,
+                speed=%(IF_SPEED)s,
+                admin_status=%(ADMIN_STATUS)s,
+                oper_status=%(OPER_STATUS)s
+                where eq_ip = %(IP)s and if_index = %(IF_INDEX)s
+            """
+            print(sql)
+            row_count = self.exec_many_Sna(sql, snmp_if_dict)
+            return row_count
+
+        except Exception as e :
+            print ("update_if() : Exception Occur -  ", e)
+            msg = '%s' % str(traceback.print_exc())
+            print (msg)
+
+            return -1
