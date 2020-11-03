@@ -81,6 +81,27 @@ class TrfCollectorSql(SnaMySql) :
             print (msg)
 
             return -1
+        
+    def save_equip_list(self, snmp_if_dict):
+        row_count = -1
+        try :
+            sql = """
+                insert into equipment
+                (eq_ip,name,vendor, 
+                model,descr,location,manage,team)
+                values
+                (%(E_IP)s,%(E_NAME)s,NULL,NULL,
+                %(E_DESCR)s, %(E_LOCATION)s,NULL,NULL)
+            """
+            row_count = self.exec_many_Sna(sql, snmp_if_dict)
+            return row_count
+
+        except Exception as e :
+            print ("save_if() : Exception Occur -  ", e)
+            msg = '%s' % str(traceback.print_exc())
+            print (msg)
+
+            return -1
 
 
     def update_if_list(self, snmp_if_dict):
@@ -106,3 +127,4 @@ class TrfCollectorSql(SnaMySql) :
             print (msg)
 
             return -1
+    
