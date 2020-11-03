@@ -1,0 +1,11 @@
+import pandas as pd
+import numpy as np
+%matplotlib inline
+import matplotlib.pyplot as plt
+
+df = pd.read_csv('C:/cansim-0800020-eng-6674700030567901031.csv',
+                 skiprows=6, skipfooter=9,
+                 engine='python')
+df.head()
+
+
