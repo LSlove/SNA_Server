@@ -45,9 +45,9 @@ SNMP_COLLECT_OIDS=[
 SNMP_COLLECT_OIDS_DICT = {
     #Equipment
     'ipAdEntAddr':'' .1.3.6.1.2.1.4.20.1.1'
-    'sysDescr': '.1.3.6.1.2.1.1.1',
-    'sysName' : '.1.3.6.1.2.1.1.5',
-    'sysLocation': '.1.3.6.1.2.1.1.6',
+    'sysDescr': '1.3.6.1.2.1.1.1',
+    'sysName' : '1.3.6.1.2.1.1.5',
+    'sysLocation': '1.3.6.1.2.1.1.6',
     
     #Information
     'ifIndex':'.1.3.6.1.2.1.2.2.1.1',
