@@ -135,13 +135,14 @@ class SnaSnmpTrfCollector(object):
                     # DB 에 저장할 시간은 일정 시간을 기준으로 저장되어야 함으로 
                     # 저장 기준 간격으로 시간을 정규화 해준다.
                     tmp_dict['IP'] = cur_data['IP']
-                    tmp_dict['TIMESTAMP'] = datetime.fromtimestamp(int(cur_timestamp - (cur_timestamp % cfg.TRF_PERIOD)))
                     tmp_dict['SNMP_INDEX'] = cur_data['SNMP_INDEX']
+                    tmp_dict['TIMESTAMP'] = datetime.fromtimestamp(int(cur_timestamp - (cur_timestamp % cfg.TRF_PERIOD)))
                     tmp_dict['BPS_IN'] = 0
                     tmp_dict['BPS_OUT'] = 0
                     tmp_dict['PPS_IN'] = 0
                     tmp_dict['PPS_OUT'] = 0
                 finally:
+                    tmp_dict['SNMP_INDEX'] = cur_data['SNMP_INDEX']
                     if (cur_data['TRF_TYPE'] == cfg.SNMP_COLLECT_OIDS_DICT['ifHCInOctets']) :
                         tmp_dict['BPS_IN'] = self.calc_bps(cur_data['CALC_COUNTER'], time_period)
                     elif (cur_data['TRF_TYPE'] == cfg.SNMP_COLLECT_OIDS_DICT['ifHCOutOctets']) :
@@ -227,9 +228,7 @@ def main():
             continue
 
     threading.Timer(60, main).start()
-
             
-
 #-------------------------------------------------------------------
     # prev_snmp_data = trf_collector.load(cfg.SNMP_DATA_FILENAME)
     # save_snmp_data = trf_collector.make_save_data(cfg.SNMP_TARGET, snmp_data, prev_snmp_data)

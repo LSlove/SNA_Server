@@ -106,3 +106,24 @@ class TrfCollectorSql(SnaMySql) :
             print (msg)
 
             return -1
+
+    def update_eq_list(self, snmp_eq_dict):
+        row_count = -1
+        try :
+            sql = """
+                update equipment
+                set name=%(EQ_NAME)s, 
+                descr=%(EQ_DESCR)s,
+                location=%(EQ_LO)s
+                where eq_ip = %(IP)s
+            """
+            print(sql)
+            row_count = self.exec_many_Sna(sql, snmp_eq_dict)
+            return row_count
+
+        except Exception as e :
+            print ("update_if() : Exception Occur -  ", e)
+            msg = '%s' % str(traceback.print_exc())
+            print (msg)
+
+            return -1

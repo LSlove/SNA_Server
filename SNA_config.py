@@ -8,16 +8,15 @@ DB_USER='SNA'
 DB_PASSWD='smart123'
 DB_NAME='SNA'
 #SNMP정보를 가져올 주소 및 커뮤니티 ,포트
-SNMP_TARGET='192.168.0.101'
 SNMP_COMMUNITY='smart123'
 SNMP_PORT='161'
 
 SNMP_COLLECT_OIDS=[
     #Equipment
-    ' .1.3.6.1.2.1.4.20.1.1',# ipAdEntAddr
-    '.1.3.6.1.2.1.1.5', #sysName
-    '.1.3.6.1.2.1.1.1', #sysDescr
-    '.1.3.6.1.2.1.1.6', #sysLocation
+    # '.1.3.6.1.2.1.4.20.1.1',# ipAdEntAddr
+    # '.1.3.6.1.2.1.1.5', #sysName
+    # '.1.3.6.1.2.1.1.1', #sysDescr
+    # '.1.3.6.1.2.1.1.6', #sysLocation
 
     #Information
     '.1.3.6.1.2.1.2.2.1.1',         # ifIndex
@@ -35,19 +34,19 @@ SNMP_COLLECT_OIDS=[
     '1.3.6.1.2.1.31.1.1.1.10',      # ifHCOutOctets
     '1.3.6.1.2.1.31.1.1.1.11',      # ifHCOutUcastPkts
     '1.3.6.1.2.1.31.1.1.1.12',      # ifHCOutMulticastPkts
-    '1.3.6.1.2.1.31.1.1.1.13',       # ifHCOutBroadcastPkts
+    '1.3.6.1.2.1.31.1.1.1.13',      # ifHCOutBroadcastPkts
 
-    #STATUS
-    '.1.3.6.1.2.1.2.2.1.7',          # ifAdminStatus
-    '.1.3.6.1.2.1.2.2.1.8'          # ifOperStatus
+    # #STATUS
+    # '.1.3.6.1.2.1.2.2.1.7',         # ifAdminStatus
+    # '.1.3.6.1.2.1.2.2.1.8'          # ifOperStatus
 ]
 
 SNMP_COLLECT_OIDS_DICT = {
-    #Equipment
-    'ipAdEntAddr':'.1.3.6.1.2.1.4.20.1.1',
-    'sysDescr':'.1.3.6.1.2.1.1.1',
-    'sysName' :'.1.3.6.1.2.1.1.5',
-    'sysLocation':'.1.3.6.1.2.1.1.6',
+    # #Equipment
+    # 'ipAdEntAddr':'.1.3.6.1.2.1.4.20.1.1',
+    # 'sysDescr':'.1.3.6.1.2.1.1.1',
+    # 'sysName' :'.1.3.6.1.2.1.1.5',
+    # 'sysLocation':'.1.3.6.1.2.1.1.6',
     
     #Information
     'ifIndex':'.1.3.6.1.2.1.2.2.1.1',
@@ -67,9 +66,9 @@ SNMP_COLLECT_OIDS_DICT = {
     'ifHCOutMulticastPkts':'1.3.6.1.2.1.31.1.1.1.12',
     'ifHCOutBroadcastPkts':'1.3.6.1.2.1.31.1.1.1.13',
 
-    #STATUS
-    'ifAdminStatus':'.1.3.6.1.2.1.2.2.1.7',
-    'ifOperStatus':'.1.3.6.1.2.1.2.2.1.8'
+    # #STATUS
+    # 'ifAdminStatus':'.1.3.6.1.2.1.2.2.1.7',
+    # 'ifOperStatus':'.1.3.6.1.2.1.2.2.1.8'
 }
 
 #OID이름을 알아내는 함수
@@ -85,8 +84,6 @@ def GET_OID(name):
             return v
             
             
-            
-
 SNMP_COUNT_OID = '1.3.6.1.2.1.2.1.0'
 
 #OID데이터를 목록불러오기

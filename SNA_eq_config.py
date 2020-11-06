@@ -14,29 +14,31 @@ SNMP_PORT='161'
 HIGH_SPEED = 1000000
 
 SNMP_COLLECT_OIDS=[
-    #Information
+     #Information
     '.1.3.6.1.2.1.2.2.1.1',         # ifIndex
-    '.1.3.6.1.2.1.31.1.1.1.1',     # ifName
+    '.1.3.6.1.2.1.31.1.1.1.1',      # ifName
     '.1.3.6.1.2.1.31.1.1.1.18',     # ifAlias
     '.1.3.6.1.2.1.2.2.1.2',         # ifDescr
     '.1.3.6.1.2.1.31.1.1.1.15',     # ifHighSpeed
 
-    #STATUS
-    '.1.3.6.1.2.1.2.2.1.7',          # ifAdminStatus
-    '.1.3.6.1.2.1.2.2.1.8'          # ifOperStatus
+    #Information
+    '.1.3.6.1.2.1.2.2.1.1',         # eqIndex
+    '.1.3.6.1.2.1.1.5',             #sysName
+    '.1.3.6.1.2.1.1.1',             #sysDescr
+    '.1.3.6.1.2.1.1.6'              #sysLocation
 ]
 
 SNMP_COLLECT_OIDS_DICT = {
-    #Interface
     'ifIndex':'1.3.6.1.2.1.2.2.1.1',
     'ifName':'1.3.6.1.2.1.31.1.1.1.1',
     'ifAlias':'1.3.6.1.2.1.31.1.1.1.18',
     'ifDescr':'1.3.6.1.2.1.2.2.1.2',
     'ifHighSpeed':'1.3.6.1.2.1.31.1.1.1.15',
 
-    #STATUS
-    'ifAdminStatus':'1.3.6.1.2.1.2.2.1.7',
-    'ifOperStatus':'1.3.6.1.2.1.2.2.1.8'
+    'eqIndex':'1.3.6.1.2.1.2.2.1.1',
+    'sysName' :'1.3.6.1.2.1.1.5',
+    'sysDescr':'1.3.6.1.2.1.1.1',
+    'sysLocation':'1.3.6.1.2.1.1.6'
 }
 
 #OID이름을 알아내는 함수
@@ -51,14 +53,11 @@ def GET_OID(name):
         if name == k:
             return v
             
-            
-            
-
 SNMP_COUNT_OID = '1.3.6.1.2.1.2.1.0'
 
 #OID데이터를 목록불러오기
 SNMP_DATA_DIR = './data'
-SNMP_DATA_FILENAME = 'if_data.dml'
+SNMP_DATA_FILENAME = 'eq_data.dml'
 
 #수집 주기 (1분)
 TRF_PERIOD = 0
