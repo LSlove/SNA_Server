@@ -26,6 +26,130 @@ class TrfCollectorSql(SnaMySql) :
             print (rows)
             return rows
 
+    def insert_day_traffic_list(self):
+        try:
+            sql = """
+                INSERT INTO day_statistics
+                (eq_ip ,if_index, st_date, 
+                now_in_traffic, now_in_packet, now_out_traffic, now_out_packet, 
+                max_in_traffic, max_in_packet, max_out_traffic, max_out_packet, 
+                avg_in_traffic, avg_in_packet, avg_out_traffic, avg_out_packet)
+                SELECT 
+                eq_ip,if_index, FROM_UNIXTIME((UNIX_TIMESTAMP(DATE_ADD(DATE_FORMAT(tr_date , '%Y-%m-%d %H:%i:%S'), Interval 5 Minute)) -
+				(UNIX_TIMESTAMP(date_add(DATE_FORMAT(tr_date, '%Y-%m-%d %H:%i:%S'), Interval 5 Minute)) % 300))) tr_date,
+                ROUND(in_traffic) now_in_traffic,ROUND(out_traffic) now_out_traffic,
+                ROUND(in_packet) now_in_packet,ROUND(out_packet) now_out_packet,
+                ROUND(MAX(in_traffic),2) max_in_traffic,ROUND(MAX(out_traffic),2) max_out_traffic,
+                ROUND(MAX(in_packet),2) max_in_packet,ROUND(MAX(out_packet),2) max_out_packet,
+                ROUND(AVG(in_traffic),2) avg_in_traffic,ROUND(AVG(out_traffic),2) avg_out_traffic,
+                ROUND(AVG(in_packet),2) avg_in_packet,ROUND(AVG(out_packet),2) avg_out_packet
+                from snmp_traffic
+                where (select max(st_date) from day_statistics) < tr_date or (select count(st_date) from day_statistics) = 0
+                group by DATE(tr_date),FLOOR(HOUR(tr_date)),FLOOR(MINUTE(tr_date)/5) ,eq_ip ,if_index;      
+            """
+            rows = self.exec_sql(sql)
+
+            return rows
+
+        except Exception as e:
+            print("database is not exist")
+            rows = '%s' % str(traceback.print_exc())
+            print (rows)
+            return rows
+
+    def insert_week_traffic_list(self):
+        try:
+            sql = """
+                INSERT INTO week_statistics
+                (eq_ip ,if_index, st_date, 
+                now_in_traffic, now_in_packet, now_out_traffic, now_out_packet, 
+                max_in_traffic, max_in_packet, max_out_traffic, max_out_packet, 
+                avg_in_traffic, avg_in_packet, avg_out_traffic, avg_out_packet)
+                SELECT 
+                eq_ip,if_index, FROM_UNIXTIME((UNIX_TIMESTAMP(DATE_ADD(DATE_FORMAT(st_date , '%Y-%m-%d %H:%i:%S'), Interval 30 Minute)) -
+				(UNIX_TIMESTAMP(date_add(DATE_FORMAT(st_date, '%Y-%m-%d %H:%i:%S'), Interval 30 Minute)) % 1800))) st_date,
+                ROUND(now_in_traffic) now_in_traffic,ROUND(now_out_traffic) now_out_traffic,
+                ROUND(now_in_packet) now_in_packet,ROUND(now_out_packet) now_out_packet,
+                ROUND(MAX(max_in_traffic),2) max_in_traffic,ROUND(MAX(max_out_traffic),2) max_out_traffic,
+                ROUND(MAX(max_in_packet),2) max_in_packet,ROUND(MAX(max_out_packet),2) max_out_packet,
+                ROUND(AVG(avg_in_traffic),2) avg_in_traffic,ROUND(AVG(avg_out_traffic),2) avg_out_traffic,
+                ROUND(AVG(avg_in_packet),2) avg_in_packet,ROUND(AVG(avg_out_packet),2) avg_out_packet
+                from day_statistics ds
+                where (select max(st_date) from week_statistics) < ds.st_date or (select count(st_date) from week_statistics) = 0
+                group by DATE(st_date),FLOOR(HOUR(st_date)),FLOOR(MINUTE(st_date)/30) ,eq_ip ,if_index;    
+            """
+            rows = self.exec_sql(sql)
+
+            return rows
+
+        except Exception as e:
+            print("database is not exist")
+            rows = '%s' % str(traceback.print_exc())
+            print (rows)
+            return rows
+
+    def insert_month_traffic_list(self):
+        try:
+            sql = """
+                INSERT INTO month_statistics
+                (eq_ip ,if_index, st_date, 
+                now_in_traffic, now_in_packet, now_out_traffic, now_out_packet, 
+                max_in_traffic, max_in_packet, max_out_traffic, max_out_packet, 
+                avg_in_traffic, avg_in_packet, avg_out_traffic, avg_out_packet)
+                SELECT 
+                eq_ip,if_index, FROM_UNIXTIME((UNIX_TIMESTAMP(DATE_ADD(DATE_FORMAT(st_date , '%Y-%m-%d %H:%i:%S'), Interval 1 Hour)) -
+				(UNIX_TIMESTAMP(date_add(DATE_FORMAT(st_date, '%Y-%m-%d %H:%i:%S'), Interval 1 Hour)) % 3600))) st_date,
+                ROUND(now_in_traffic) now_in_traffic,ROUND(now_out_traffic) now_out_traffic,
+                ROUND(now_in_packet) now_in_packet,ROUND(now_out_packet) now_out_packet,
+                ROUND(MAX(max_in_traffic),2) max_in_traffic,ROUND(MAX(max_out_traffic),2) max_out_traffic,
+                ROUND(MAX(max_in_packet),2) max_in_packet,ROUND(MAX(max_out_packet),2) max_out_packet,
+                ROUND(AVG(avg_in_traffic),2) avg_in_traffic,ROUND(AVG(avg_out_traffic),2) avg_out_traffic,
+                ROUND(AVG(avg_in_packet),2) avg_in_packet,ROUND(AVG(avg_out_packet),2) avg_out_packet
+                from week_statistics ws
+                where (select max(st_date) from month_statistics) < ws.st_date or (select count(st_date) from month_statistics) = 0
+                group by DATE(st_date),FLOOR(HOUR(st_date)/1),MINUTE(st_date) ,eq_ip ,if_index;    
+            """
+            rows = self.exec_sql(sql)
+
+            return rows
+
+        except Exception as e:
+            print("database is not exist")
+            rows = '%s' % str(traceback.print_exc())
+            print (rows)
+            return rows
+
+    def insert_year_traffic_list(self):
+        try:
+            sql = """
+                INSERT INTO year_statistics
+                (eq_ip ,if_index, st_date, 
+                now_in_traffic, now_in_packet, now_out_traffic, now_out_packet, 
+                max_in_traffic, max_in_packet, max_out_traffic, max_out_packet, 
+                avg_in_traffic, avg_in_packet, avg_out_traffic, avg_out_packet)
+                SELECT 
+                eq_ip,if_index, FROM_UNIXTIME((UNIX_TIMESTAMP(DATE_ADD(DATE_FORMAT(st_date , '%Y-%m-%d %H:%i:%S'), Interval 2 Hour)) -
+				(UNIX_TIMESTAMP(date_add(DATE_FORMAT(st_date, '%Y-%m-%d %H:%i:%S'), Interval 2 Hour)) % 7200))) st_date,
+                ROUND(now_in_traffic) now_in_traffic,ROUND(now_out_traffic) now_out_traffic,
+                ROUND(now_in_packet) now_in_packet,ROUND(now_out_packet) now_out_packet,
+                ROUND(MAX(max_in_traffic),2) max_in_traffic,ROUND(MAX(max_out_traffic),2) max_out_traffic,
+                ROUND(MAX(max_in_packet),2) max_in_packet,ROUND(MAX(max_out_packet),2) max_out_packet,
+                ROUND(AVG(avg_in_traffic),2) avg_in_traffic,ROUND(AVG(avg_out_traffic),2) avg_out_traffic,
+                ROUND(AVG(avg_in_packet),2) avg_in_packet,ROUND(AVG(avg_out_packet),2) avg_out_packet
+                from month_statistics ms
+                where ((select max(st_date) from year_statistics) < ms.st_date) or (select count(st_date) from year_statistics) = 0
+                group by DATE(st_date),FLOOR(HOUR(st_date)/2),MINUTE(st_date) ,eq_ip ,if_index;    
+            """
+            rows = self.exec_sql(sql)
+
+            return rows
+
+        except Exception as e:
+            print("database is not exist")
+            rows = '%s' % str(traceback.print_exc())
+            print (rows)
+            return rows
+
 
     def save_snmp_trf_list(self, snmp_trf_dict):
         row_count = -1
@@ -65,12 +189,14 @@ class TrfCollectorSql(SnaMySql) :
             # """
 
             sql = """
-                insert into Interface
-                (eq_ip,if_index,name, 
-                alias,descr,speed,admin_status,oper_status)
+                insert into interface
+                (eq_ip,if_index,name,mac_addr,
+                alias,descr,speed,
+                admin_status,oper_status)
                 values
-                (%(IP)s,%(IF_INDEX)s,%(IF_NAME)s,%(IF_ALIAS)s,
-                %(IF_DESCR)s, %(IF_SPEED)s, %(ADMIN_STATUS)s, %(OPER_STATUS)s)
+                (%(IP)s,%(IF_INDEX)s,%(IF_NAME)s,%(MAC_ADDR)s,
+                %(IF_ALIAS)s,%(IF_DESCR)s, %(IF_SPEED)s,
+                %(ADMIN_STATUS)s, %(OPER_STATUS)s)
             """
             row_count = self.exec_many_Sna(sql, snmp_if_dict)
             return row_count
@@ -87,8 +213,9 @@ class TrfCollectorSql(SnaMySql) :
         row_count = -1
         try :
             sql = """
-                update Interface
+                update interface
                 set name=%(IF_NAME)s, 
+                mac_addr=%(MAC_ADDR)s,
                 alias=%(IF_ALIAS)s,
                 descr=%(IF_DESCR)s,
                 speed=%(IF_SPEED)s,

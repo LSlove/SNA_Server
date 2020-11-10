@@ -16,10 +16,11 @@ HIGH_SPEED = 1000000
 SNMP_COLLECT_OIDS=[
     #Information
     '.1.3.6.1.2.1.2.2.1.1',         # ifIndex
-    '.1.3.6.1.2.1.31.1.1.1.1',     # ifName
+    '.1.3.6.1.2.1.31.1.1.1.1',      # ifName
     '.1.3.6.1.2.1.31.1.1.1.18',     # ifAlias
     '.1.3.6.1.2.1.2.2.1.2',         # ifDescr
     '.1.3.6.1.2.1.31.1.1.1.15',     # ifHighSpeed
+    '.1.3.6.1.2.1.2.2.1.6'          # ifPhysAddress
 
     #STATUS
     '.1.3.6.1.2.1.2.2.1.7',          # ifAdminStatus
@@ -33,6 +34,7 @@ SNMP_COLLECT_OIDS_DICT = {
     'ifAlias':'1.3.6.1.2.1.31.1.1.1.18',
     'ifDescr':'1.3.6.1.2.1.2.2.1.2',
     'ifHighSpeed':'1.3.6.1.2.1.31.1.1.1.15',
+    'ifPhysAddress':'1.3.6.1.2.1.2.2.1.6',
 
     #STATUS
     'ifAdminStatus':'1.3.6.1.2.1.2.2.1.7',

@@ -6,6 +6,12 @@ from datetime import datetime
 import pickle as pk
 import numpy as np
 import traceback
+from pyasn1.type.univ import OctetString
+import binascii
+#from netaddr import *
+from pysnmp.smi import builder
+import struct
+
 
 from sna_snmp import SnaSnmp as snmp
 from trf_collector_sql import TrfCollectorSql as sqlExec
@@ -51,7 +57,9 @@ class SnaIfTrfCollector(object):
     def get_snmp_traffic(self, target, community, oids, count_oid, version=1, timeout=1, retries=3, port=161):
         snmp_data = self.snmp.get_bulk_auto(target, oids, community, count_oid, 
                         version=version, timeout=timeout, retries=retries, port=port)
-
+        # print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+        # print("snmp_data",snmp_data)
+        # print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
         return snmp_data
 
     # def get_snmp_select(self, target, community, oids, count_oid, version, timeout=1, retries=3, port):
@@ -83,6 +91,12 @@ class SnaIfTrfCollector(object):
                     tmp_dict['IF_INDEX'] = oid_index
                     tmp_dict['TRF_TYPE'] = oid
                     tmp_dict['VALUE'] = value
+
+                    # print(">>>>>")
+                    # print("tep_dict : ",tmp_dict)
+                    # print("oids : ",oids)
+                    # print("value : ",value)
+                    # print(">>>>>")
 
                     # print("target = ", target)
                     # print("oid : ", oid)
@@ -134,6 +148,32 @@ class SnaIfTrfCollector(object):
                     if (cur_data['TRF_TYPE'] == cfg.SNMP_COLLECT_OIDS_DICT['ifName']) :
                         tmp_dict['IF_NAME'] = cur_data['VALUE']
 
+                    if (cur_data['TRF_TYPE'] == cfg.SNMP_COLLECT_OIDS_DICT['ifPhysAddress']) :
+                        if len(cur_data['VALUE']) > 0 :
+                            mibBuilder = builder.MibBuilder()
+                            MacAddress, = mibBuilder.importSymbols('SNMPv2-TC','MacAddress')
+                            print (">>>> ", cur_data['VALUE'])
+
+                            print(">>>>>>> ",binascii.hexlify(cur_data['VALUE'].encode()).decode())
+                            macAdd =  MacAddress(hexValue=binascii.hexlify(cur_data['VALUE'].encode()).decode().zfill(12))
+                            print("!!>>>> MAC : ", macAdd)
+                        else:
+                            print("ADDR NOT EXIST")
+                            tmp_dict['MAC_ADDR'] = ''   
+                        #print(">>>>>> mac addr1 : ",binascii.hexlify(cur_data['VALUE'].encode()).decode(ascii))
+                        # if len(cur_data['VALUE']) > 0 :
+                        #     print(">> cur_data = ", cur_data, type(cur_data['VALUE']))
+                        #     print(">>>>>> mac addr1 : ", ':'.join('%.2x' % x for x in OctetString(hexValue=cur_data['VALUE'])).asNumbers())
+                        
+                        tmp_dict['MAC_ADDR'] = binascii.hexlify(cur_data['VALUE'].encode())
+                        # if len(cur_data['VALUE']) > 0 :
+                        #     print("OctetString : ",OctetString(hexValue=cur_data['VALUE']).asNumbers())
+                        #     tmp_dict['MAC_ADDR'] = ':'.join('%.2x' % x for x in OctetString(hexValue=cur_data['VALUE']).asNumbers())
+                        #     print("!! tmp_dict['MAC_ADDR'] = ",  tmp_dict['MAC_ADDR'])
+                        # else :
+                        #     print("ADDR NOT EXIST")
+                        #     tmp_dict['MAC_ADDR'] = ''
+
                     if (cur_data['TRF_TYPE'] == cfg.SNMP_COLLECT_OIDS_DICT['ifAlias']) :
                         tmp_dict['IF_ALIAS'] = cur_data['VALUE']
 
@@ -165,10 +205,12 @@ class SnaIfTrfCollector(object):
                 print('Not found in previous if')
                 continue
             except Exception as e :
+                print(traceback.format_exc())
                 print('Exception occur - ', e)
                 print(" tmp_dict['IP'] = ",  tmp_dict['IP'])
                 print(" tmp_dict['IF_INDEX'] = ",  tmp_dict['IF_INDEX'])
                 print(" tmp_dict['IF_NAME'] = ",  tmp_dict['IF_NAME'])
+                print(" tmp_dict['MAC_ADDR'] = ",  tmp_dict['MAC_ADDR'])
                 print(" tmp_dict['IF_ALIAS'] = ",  tmp_dict['IF_ALIAS'])
                 print(" tmp_dict['IF_DESCR'] = ",  tmp_dict['IF_DESCR'])
                 print(" tmp_dict['IF_SPEED'] = ",  tmp_dict['IF_SPEED'])
