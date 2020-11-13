@@ -96,7 +96,7 @@ def main():
                         mysql_exec.commit()
                         print("End ErrorData")
                 else:
-                    print("check Interface DB",if_speed[0][0])
+                    print("check Interface DB",if_speed[targets][0])
     except Exception as e:
         print(e)
 
