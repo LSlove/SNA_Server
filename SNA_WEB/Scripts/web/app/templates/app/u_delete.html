@@ -1,0 +1,23 @@
+{% extends "app/base_site.html" %}
+
+{% block title %} Login {% endblock title %}
+
+{% block stylesheets %}
+  {{ block.super }}
+  <!-- Animate.css -->
+  <link href="/static/vendors/animate.css/animate.min.css" rel="stylesheet">
+{% endblock stylesheets %}
+
+{% block body_class %}login{% endblock body_class %}
+
+{% block body %}
+  <script>
+      var r = confirm("사용자를 삭제했습니다.");
+if (r == true) {
+    document.location.href="/user";
+} else {
+    document.location.href="/user";
+}
+  </script>
+{% endblock body %}
+

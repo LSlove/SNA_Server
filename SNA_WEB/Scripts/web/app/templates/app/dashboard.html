@@ -1,0 +1,572 @@
+{% extends "app/base_site.html" %}
+
+{% block title %} Table Dynamic {% endblock title %}
+
+{% block stylesheets %}
+  {{ block.super }}
+  <link href="/static/vendors/datatables.net-bs/css/dataTables.bootstrap.min.css" rel="stylesheet">
+  <link href="/static/vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css" rel="stylesheet">
+  <link href="/static/vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css" rel="stylesheet">
+  <link href="/static/vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css" rel="stylesheet">
+  <link href="/static/vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css" rel="stylesheet">
+{% endblock stylesheets %}
+
+{% block content %}
+  <div class="right_col" role="main">
+    <div class="">
+      <div class="row">
+<!--         
+      <div class="page-title">
+        <div class="title_left">
+          <h3>Users <small>Some examples to get you started</small></h3>
+        </div>
+      </div> -->
+      <div class="col-md-4 col-sm-4 col-xs-12">
+        <div class="x_panel">
+          <div class="x_title">
+            <h2>망구성도</h2>
+            <div class="clearfix"></div>
+          </div>
+          <!doctype html>
+          <html>
+  
+          <head>
+            <script type="text/javascript" src="../static/build/js/vis-network.min.js"></script>
+            <script src="../static/build/js/vue.js"></script>
+            <style type="text/css">
+              #mynetwork {
+                width: 550px;
+                height: 380px;
+                border: 1px solid lightgray;
+              }
+            </style>
+          </head>
+  
+          <body>
+            <h4>DataSet (change the data while it&apos;s loaded and initialzed):</h4>
+            <input type="button" onclick="addNode()" value="add node dynamically" />
+            <br />
+            <input
+              type="button"
+              onclick="changeNode1()"
+              value="change node 1's color dynamically"
+            />
+            <br />
+            <input
+              type="button"
+              onclick="removeRandomNode()"
+              value="remove a random Node"
+            />
+            <br />
+            <input type="button" onclick="resetAllNodes()" value="reload all nodes" />
+            <br />
+            <input
+              type="button"
+              onclick="resetAllNodesStabilize()"
+              value="reload all nodes and stabilize"
+            />
+            <br />
+            
+            <h4>setOptions (change the global options):</h4>
+            <input
+              type="button"
+              onclick="changeOptions()"
+              value="change the global options"
+            /><br />
+            
+            <h4>setData (reinitialize the data):</h4>
+            <input
+              type="button"
+              onclick="setTheData()"
+              value="setData. This stabilizes again if stabilization is true."
+            /><br />
+            
+            <h4>Cleanly destroy the network and restart it:</h4>
+            <input
+              type="button"
+              onclick="resetAll()"
+              value="Destroy the network and restart it."
+            /><br />
+            <div id="mynetwork"></div>
+            <div id="mynetwork"></div>
+            <script type="text/javascript">
+          var nodeIds, shadowState, nodesArray, nodes, edgesArray, edges, network;
+
+function startNetwork() {
+  nodeIds = [2, 3, 4, 5];
+  shadowState = false;
+var x=0;
+// x++;
+  nodesArray = [ 
+    { id: x, label: "{% for e in equipment %}{{e.name}}{% endfor %}" },
+    { id: x+1, label: "Node 2" },
+    // { id: x+1, label: "Node 3" },
+    // { id: x+1, label: "Node 4" },
+    // { id: x+1, label: "Node 5" },
+  ];
+  nodes = new vis.DataSet(nodesArray);
+
+  // create an array with edges
+  edgesArray = [
+    { from: 1, to: 3 },
+    { from: 1, to: 2 },
+    { from: 2, to: 4 },
+    { from: 2, to: 5 },
+  ];
+  edges = new vis.DataSet(edgesArray);
+
+  // create a network
+  var container = document.getElementById("mynetwork");
+  var data = {
+    nodes: nodes,
+    edges: edges,
+  };
+  var options = {};
+  network = new vis.Network(container, data, options);
+}
+
+function addNode() {
+  var newId = (Math.random() * 1e7).toString(32);
+  nodes.add({ id: newId, label: "I'm new!" });
+  nodeIds.push(newId);
+}
+
+function changeNode1() {
+  var newColor = "#" + Math.floor(Math.random() * 255 * 255 * 255).toString(16);
+  nodes.update([{ id: 1, color: { background: newColor } }]);
+}
+
+function removeRandomNode() {
+  var randomNodeId = nodeIds[Math.floor(Math.random() * nodeIds.length)];
+  nodes.remove({ id: randomNodeId });
+
+  var index = nodeIds.indexOf(randomNodeId);
+  nodeIds.splice(index, 1);
+}
+
+function changeOptions() {
+  shadowState = !shadowState;
+  network.setOptions({
+    nodes: { shadow: shadowState },
+    edges: { shadow: shadowState },
+  });
+}
+
+function resetAllNodes() {
+  nodes.clear();
+  edges.clear();
+  nodes.add(nodesArray);
+  edges.add(edgesArray);
+}
+
+function resetAllNodesStabilize() {
+  resetAllNodes();
+  network.stabilize();
+}
+
+function setTheData() {
+  nodes = new vis.DataSet(nodesArray);
+  edges = new vis.DataSet(edgesArray);
+  network.setData({ nodes: nodes, edges: edges });
+}
+
+function resetAll() {
+  if (network !== null) {
+    network.destroy();
+    network = null;
+  }
+  startNetwork();
+}
+
+startNetwork();
+
+              // var nodes = null;
+              // var edges = null;
+              // var network = null;
+  
+              // var DIR = "../img/refresh-cl/";
+              // var EDGE_LENGTH_MAIN = 150;
+              // var EDGE_LENGTH_SUB = 50;
+  
+              // // Called when the Visualization API is loaded.
+              // function draw() {
+              //   // Create a data table with nodes.
+              //   nodes = [];
+  
+              //   // Create a data table with links.
+              //   edges = [];
+  
+                // nodes.push({
+                //   id: 1,
+                //   label: "SERVER",
+                //   image: "/static/images/server1.png",
+                //   shape: "image",
+                // });
+                // nodes.push({
+                //   id: 2,
+                //   label: "WEB",
+                //   image: "/static/images/web1.png",
+                //   shape: "image",
+                // });
+                // nodes.push({
+                //   id: 3,
+                //   label: "공유기",
+                //   image: "/static/images/wiifi1.png",
+                //   shape: "image",
+                // });
+              //   edges.push({ from: 1, to: 2, length: EDGE_LENGTH_MAIN });
+              //   edges.push({ from: 1, to: 3, length: EDGE_LENGTH_MAIN });
+  
+              //   edges.push({ from: 2, to: 103, length: EDGE_LENGTH_SUB });
+  
+              //   nodes.push({
+              //     id: 102,
+              //     label: "{% for a in equipment %}{{e.name}}{% endfor %}",
+              //     image: "/static/images/router1.png",
+              //     shape: "image",
+              //   });
+              //   edges.push({ from: 3, to: 102, length: EDGE_LENGTH_SUB });
+  
+              //   nodes.push({
+              //     id: 103,
+              //     label: "DB",
+              //     image: "/static/images/db1.png",
+              //     shape: "image",
+              //   });
+              //   edges.push({ from: 1, to: 103, length: EDGE_LENGTH_SUB });
+                
+              //   nodes.push({
+              //     id: 105,
+              //     label: "{% for e in equipment %}{{e.name}}{% endfor %}",
+              //     image: "/static/images/router1.png",
+              //     shape: "image",
+              //   });
+              //   edges.push({ from: 3, to: 105, length: EDGE_LENGTH_SUB });
+  
+              //   nodes.push({
+              //     id: 106,
+              //     label: "{% for e in equipment %}{{e.name}}{% endfor %}",
+              //     image: "/static/images/router1.png",
+              //     shape: "image",
+              //   });
+              //   edges.push({ from: 3, to: 106, length: EDGE_LENGTH_SUB });
+  
+              //   // create a network
+              //   var container = document.getElementById("mynetwork");
+              //   var data = {
+              //     nodes: nodes,
+              //     edges: edges,
+              //   };
+              //   var options = {};
+              //   network = new vis.Network(container, data, options);
+              // }
+              // window.addEventListener("load", () => {
+              //   draw();
+              // });
+
+
+            </script>
+          </body>
+        </div>
+      </div>
+      <div class="col-md-8 col-sm-8 col-xs-12">
+        <div class="x_panel">
+          <div class="x_title">
+            <h2>성능정보</h2>
+            <ul class="nav navbar-right panel_toolbox">
+              <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+              </li>
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i
+                    class="fa fa-wrench"></i></a>
+                <ul class="dropdown-menu" role="menu">
+                  <li><a href="#">Settings 1</a>
+                  </li>
+                  <li><a href="#">Settings 2</a>
+                  </li>
+                </ul>
+              </li>
+              <li><a class="close-link"><i class="fa fa-close"></i></a>
+              </li>
+            </ul>
+            <div class="clearfix"></div>
+          </div>
+          <div class="col-md-12">
+            <div class="x_content2">
+              <h2>트래픽 추이</h2>
+              <!-- <div id="graph_area" style="width:100%; height:150px;"></div> -->
+              <!doctype html>
+              <html>
+      
+              <head>
+                <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.min.js"></script>
+                <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js"></script>
+              </head>
+              <body>
+                <canvas id="myChart2" width="1180" height="152"></canvas>
+<script>   
+ let data = [{% for s in traffic %}{{s.in_traffic}}, {% endfor %} ];
+  var context = document.getElementById("myChart2").getContext("2d");
+  var myChart2 = new Chart(context, {
+      type: "line",
+      data: {
+          labels: [" ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
+          // labels: [{% for s in snmp_traffic %}{{s.tr_date}}, {% endfor %}],
+          datasets: [{
+              label: "Traffic",
+              data: data,
+              backgroundColor: [
+                  "rgba(255, 99, 132, 0.2)",
+                  "rgba(54, 162, 235, 0.2)",
+                  "rgba(255, 206, 86, 0.2)",
+                  "rgba(75, 192, 192, 0.2)",
+                  "rgba(153, 102, 255, 0.2)",
+                  "rgba(255, 159, 64, 0.2)"
+              ],
+              borderColor: [
+                  "rgba(255,99,132,1)",
+                  "rgba(54, 162, 235, 1)",
+                  "rgba(255, 206, 86, 1)",
+                  "rgba(75, 192, 192, 1)",
+                  "rgba(153, 102, 255, 1)",
+                  "rgba(255, 159, 64, 1)"
+              ],
+              borderWidth: 1,
+              fill: "start",
+          }]
+      },
+      options: {
+          scales: {
+              yAxes: [{
+                  ticks: {
+                      beginAtZero: true
+                  }
+              }]
+          },
+          elements: {
+              line: {
+                  // tension: 0,
+                  // no smooth
+              }
+          }
+      }
+  });
+  let flag = setInterval(() => {
+      let newData = data[0],
+          oldData = data.slice(1);
+      oldData.push(newData)
+      data = [].concat(oldData);
+      myChart2.data.datasets[0].data = data;
+      myChart2.update(0);
+  }, 1000);
+  </script>
+        </section>
+    </section>
+</body>
+</html>
+                </script>
+              </body>
+              <h2>예측 트래픽</h2>
+              <!doctype html>
+              <html>
+              <head>
+                <script type="text/javascript" src="../static/build/js/Chart.bundle2.min.js"></script>
+                <script type="text/javascript" src="../static/build/js/Chart.min.js"></script>
+              </head>
+              <canvas id="myChart1" width="1180" height="152"></canvas>
+              <!-- <div id="graph_area2" style="width:100%; height:150px;"></div> -->
+              <script>
+                 var context = document.getElementById("myChart1").getContext("2d");
+  var myChart1 = new Chart(context, {
+      type: "line",
+      data: {
+          labels: [" ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
+          // labels: [{% for a in auth_user %} "{{a.id}}", {% endfor %}],
+          datasets: [{
+              label: "Traffic",
+              data: data,
+              backgroundColor: [
+                  "rgba(255, 99, 132, 0.2)",
+                  "rgba(54, 162, 235, 0.2)",
+                  "rgba(255, 206, 86, 0.2)",
+                  "rgba(75, 192, 192, 0.2)",
+                  "rgba(153, 102, 255, 0.2)",
+                  "rgba(255, 159, 64, 0.2)"
+              ],
+              borderColor: [
+                  "rgba(255,99,132,1)",
+                  "rgba(54, 162, 235, 1)",
+                  "rgba(255, 206, 86, 1)",
+                  "rgba(75, 192, 192, 1)",
+                  "rgba(153, 102, 255, 1)",
+                  "rgba(255, 159, 64, 1)"
+              ],
+              borderWidth: 1,
+              fill: "start",
+          }]
+      },
+      options: {
+          scales: {
+              yAxes: [{
+                  ticks: {
+                      beginAtZero: true
+                  }
+              }]
+          },
+          elements: {
+              line: {
+
+              }
+          }
+      }
+  });
+  let fla = setInterval(() => {
+      let newData = data[0],
+          oldData = data.slice(1);
+      oldData.push(newData)
+      data = [].concat(oldData);
+      myChart1.data.datasets[0].data = data;
+      myChart1.update(0);
+  }, 1000);
+              </script>
+              </html>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+      <div class="clearfix"></div>
+      <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+          <div class="x_panel">
+            <div class="x_title">
+              <h2>장애 리스트</h2>
+              <ul class="nav navbar-right panel_toolbox">
+                <span style="background: rgb(255, 0, 0); padding: 10px; color: white;">Critical </span>
+                <span style="background: rgb(216, 137, 137); padding: 10px; color: white;">{{a.Critical}}</span>
+                &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+                <span style="background: rgb(255, 123, 0); padding: 10px; color: white;">Major </span>
+                <span style="background: rgb(216, 184, 137); padding: 10px; color: white;">{{a.Major}}</span>
+                &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+                <span style="background: rgb(207, 194, 13); padding: 10px; color: white;">Minor </span>
+                <span style="background: rgb(216, 204, 137); padding: 10px; color: white;">{{a.Minor}}</span>
+  
+              </ul>
+              <div class="clearfix"></div>
+            </div>
+            
+          
+        <div id="grid"></div>
+        <script>
+          var grid = new tui.Grid({
+            el: document.getElementById('grid'),
+            bodyHeight: 500,
+            scrollX: false,
+            scrollY: false,
+            minBodyHeight: 30,
+            pageOptions: {
+              useClient:true,
+              perPage: 10
+            },
+            columns: [
+              {
+                header: '장비 명',
+                name: 'name',
+                filter: {
+                  type: 'text',
+                  operator: 'OR'
+                }
+              },
+              {
+                header: 'IP',
+                name: 'artist',
+                filter: {
+                  type: 'text',
+                  operator: 'OR'
+                }
+              },
+              {
+                header: '등급',
+                name: 'price',
+                filter: 'select'
+              },
+              {
+                header: '종류',
+                name: 'release',
+                filter: 'select'
+              },
+              {
+                header: '설명',
+                name: 'genre',
+               
+              },
+              {
+                header: '발생시각',
+                name: 'genre',
+                filter: {
+                  type: 'date',
+                  format: 'yyyy.MM.dd'
+                }
+              },
+              {
+                header: '지속시간',
+                name: 'genre',
+                filter: {
+                  type: 'date',
+                  format: 'yyyy.MM.dd'
+                }
+              },
+              {
+                header: '발생횟수',
+                name: 'genre',
+                filter: 'select'
+              },
+              {
+                header: '장애조치',
+                name: 'genre',
+                filter: 'select'
+              },
+            ]
+          });
+
+          // var data = [  
+          // {% for s in snmp_traffic %} 
+          //   {
+          // name:"{{s.if_index}}"
+          //   },
+          // {% endfor %}
+          // ];
+          // grid.resetData(data);
+
+        </script>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock content %}
+
+{% block javascripts %}
+  {{ block.super }}
+<script src="/static/vendors/raphael/raphael.min.js"></script>
+<script src="/static/vendors/morris.js/morris.min.js"></script>
+<script src="/static/vendors/raphael/raphael.min2.js"></script>
+<script src="/static/vendors/morris.js/morris.min2.js"></script>
+
+  <!-- Datatables -->
+  <script src="/static/vendors/datatables.net/js/jquery.dataTables.min.js"></script>
+  <script src="/static/vendors/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+  <script src="/static/vendors/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
+  <script src="/static/vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js"></script>
+  <script src="/static/vendors/datatables.net-buttons/js/buttons.flash.min.js"></script>
+  <script src="/static/vendors/datatables.net-buttons/js/buttons.html5.min.js"></script>
+  <script src="/static/vendors/datatables.net-buttons/js/buttons.print.min.js"></script>
+  <script src="/static/vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js"></script>
+  <script src="/static/vendors/datatables.net-keytable/js/dataTables.keyTable.min.js"></script>
+  <script src="/static/vendors/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
+  <script src="/static/vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js"></script>
+  <script src="/static/vendors/datatables.net-scroller/js/dataTables.scroller.min.js"></script>
+  <script src="/static/vendors/jszip/dist/jszip.min.js"></script>
+  <script src="/static/vendors/pdfmake/build/pdfmake.min.js"></script>
+  <script src="/static/vendors/pdfmake/build/vfs_fonts.js"></script>
+{% endblock javascripts %}

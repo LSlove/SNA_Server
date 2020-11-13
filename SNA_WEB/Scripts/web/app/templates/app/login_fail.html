@@ -1,0 +1,23 @@
+{% extends "app/base_site.html" %}
+
+{% block title %} Login {% endblock title %}
+
+{% block stylesheets %}
+  {{ block.super }}
+  <!-- Animate.css -->
+  <link href="/static/vendors/animate.css/animate.min.css" rel="stylesheet">
+{% endblock stylesheets %}
+
+{% block body_class %}login{% endblock body_class %}
+
+{% block body %}
+  <script>
+      var r = confirm("로그인에 실패하셨습니다. \n회원가입 창으로 이동하시겠습니끼?");
+if (r == true) {
+    document.location.href="/signup";
+} else {
+    document.location.href="/";
+}
+  </script>
+{% endblock body %}
+

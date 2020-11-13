@@ -1,0 +1,231 @@
+<!-- 장비관리 -->
+{% extends "app/base_site.html" %}
+
+{% block title %} Morris JS {% endblock title %}
+
+{% block stylesheets %}
+{{ block.super }}
+{% endblock stylesheets %}
+
+{% block content %}
+<div class="right_col" role="main">
+  <div class="row">
+  <div class="col-md-12 col-sm-12 col-xs-12">
+    <div class="x_panel">
+      <div class="x_title">
+        <h2>담당 / 팀 검색</h2>
+        <ul class="nav navbar-right panel_toolbox">
+        </ul>
+        <div class="clearfix"></div>
+      </div>
+      <div class="x_content">
+
+        <form class="form-horizontal form-label-left">
+
+          <div class="form-group">
+            <label class="col-sm-1 control-label">담당</label>
+            <div class="col-sm-3">
+                <div class="btn-group">
+                    <select class="form-control" style="width: 200px">
+                      <option>벤더</option>
+                      <option> </option>
+                      <option> </option>
+                      <option> </option>
+                    </select>
+                  </div>
+            </div>
+            <label class="col-sm-1 control-label">직급</label>
+            <div class="col-sm-3">
+                <div class="btn-group">
+                    <select class="form-control" style="width: 200px">
+                      <option>등급</option>
+                      <option> </option>
+                      <option> </option>
+                      <option> </option>
+                    </select>
+                  </div>
+            </div>
+            
+            <div class="form-group">
+            </div>
+            <label class="col-sm-1 control-label">팀</label>
+            <div class="col-sm-3">
+              
+              <div class="btn-group">
+                <select class="form-control" style="width: 200px">
+                  <option>모델</option>
+                  <option> </option>
+                  <option> </option>
+                  <option> </option>
+                </select>
+              </div>
+            </div>
+            <label class="col-sm-1 control-label">등급</label>
+            <div class="col-sm-3">
+                <div class="btn-group">
+                    <select class="form-control" style="width: 200px">
+                      <option>종류</option>
+                      <option> </option>
+                      <option> </option>
+                      <option> </option>
+                    </select>
+                  </div>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-default middle" style="float: right;">검색</button>         
+        </form>
+      </div>
+    </div>
+</div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+      <div class="x_panel">
+        <div class="x_title">
+
+          <h2>담당 / 팀 리스트</small></h2>
+
+          <ul class="nav navbar-right panel_toolbox">
+            <div class="form-group">
+              <a href="/team_register"> <button type="submit" class="btn btn-default">등록</button></a>
+              <a href="/user_code/team_change"type="submit" class="btn btn-default" id="modify">수정</a>
+              <a href="/user_code/team_delete"type="submit" class="btn btn-default" id="delete">삭제</a>
+            </div>
+          </ul>
+
+          <div class="clearfix"></div>
+        </div>
+        <div id="grid"></div>
+        <script>
+          const grid = new tui.Grid({
+            el: document.getElementById('grid'),
+            bodyHeight: 500,
+            scrollX: false,
+            scrollY: false,
+            minBodyHeight: 30,
+            rowHeaders: ['checkbox'],
+            pageOptions: {
+              userClient: true,
+              perPage: 10
+            },
+            columns: [
+            {
+                header: '이름',
+                name: 'username',
+                filter: {
+                  type: 'text',
+                  operator: 'OR'
+                }
+              },
+              {
+                header: 'USER_ID',
+                name: 'user_id',
+                filter: {
+                  type: 'text',
+                  operator: 'OR'
+                }
+              },
+              {
+                header: 'PassWord',
+                name: 'password',
+                filter: {
+                  type: 'text',
+                  operator: 'OR'
+                }
+              }, 
+              {
+                header: '이메일',
+                name: 'email',
+                filter: {
+                  type: 'text',
+                  operator: 'OR'
+                }
+              },
+              {
+                header: '전화번호',
+                name: 'phone',
+                filter: {
+                  type: 'text',
+                  operator: 'OR'
+                }
+              },
+              {
+                header: '담당',
+                name: 'charge',
+                filter: 'select'
+              },
+              {
+                header: '팀',
+                name: 'team',
+                filter: 'select'
+              },
+              {
+                header: '직급',
+                name: 'position',
+                filter: 'select'
+              },
+              {
+                header: '입사일',
+                name: 'date',
+                filter: {
+                  type: 'date',
+                  format: 'yyyy.MM.dd'
+                }
+              },
+              {
+                header: '운영자 등급',
+                name: 'grade',
+                filter: 'select'
+              },
+            ]
+          });
+
+          var teamData = [  
+          {% for a in user_code %} 
+            {
+              username: "{{a.username}}",
+              user_id: "{{a.user_id}}",
+              password: "{{a.password}}",
+              charge:"{{a.charge}}",
+              team:"{{a.team}}",
+              position:"{{a.position}}",
+              grade:"{{a.grade}}",
+              phone:"{{a.phone}}",
+              email:"{{a.email}}",
+              date_joined:"{{a.date_joined}}"
+            },
+          {% endfor %}
+          ];
+          grid.resetData(teamData);
+
+          grid.on('check', (ev) => {
+             console.log(grid.getRow(ev.rowKey).user_id);
+             selected_id = grid.getRow(ev.rowKey).user_id 
+             console.log("selected_id : " , selected_id)
+             var loc = "/user_code/team_change/" + grid.getRow(ev.rowKey).user_id; 
+             document.getElementById("modify").href=loc;
+             var loc = "/user_code/team_delete/" + grid.getRow(ev.rowKey).user_id; 
+             document.getElementById("delete").href=loc;
+          });   
+        </script>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+
+
+
+
+
+
+
+
+{% endblock content %}
+
+{% block javascripts %}
+{{ block.super }}
+
+{% endblock javascripts %}

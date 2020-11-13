@@ -1,0 +1,246 @@
+{% extends "app/base_site.html" %}
+
+{% block title %} Morris JS {% endblock title %}
+
+{% block stylesheets %}
+{{ block.super }}
+{% endblock stylesheets %}
+
+{% block content %}
+<div class="right_col" role="main">
+  <div class="row">
+
+
+    <div class="col-md-12 col-sm-12 col-xs-12">
+      <div class="x_panel">
+        <div class="x_title">
+          <h2>장비 성능 이력</h2>
+          <ul class="nav navbar-right panel_toolbox">
+            <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+            </li>
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i
+                  class="fa fa-wrench"></i></a>
+              <ul class="dropdown-menu" role="menu">
+                <li><a href="#">Settings 1</a>
+                </li>
+                <li><a href="#">Settings 2</a>
+                </li>
+              </ul>
+            </li>
+            <li><a class="close-link"><i class="fa fa-close"></i></a>
+            </li>
+          </ul>
+          <div class="clearfix"></div>
+        </div>
+        <div class="col-md-12">
+          <div class="x_content2">
+            <!doctype html>
+            <html>
+    
+            <head>
+              <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.min.js"></script>
+              <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js"></script>
+              <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+            </head>
+            <body>
+              <canvas id="myChart" width="1180" height="150"></canvas>
+              <script>
+                var ctx = document.getElementById('myChart').getContext('2d');
+                var myChart = new Chart(ctx, {
+                  type: 'line',
+                  data: {
+                    labels: ['봄', '여름', '가을', '겨울'],
+                    datasets: [{
+                      label: 'CPU',
+                      data: [{% for e in equip_performance %}
+                    {{e.cpu_use}}, {% endfor %}],
+                      backgroundColor: "rgba(38,185,154,0.4)",
+                      lineColors: ['#26B99A'],
+                  }, {
+                      label:'Memory',
+                      data:[{% for e in equip_performance %}
+                    {{e.memory_use}}, {% endfor %}],
+                      backgroundColor: "rgba(52,73,94,0.4)",
+                      lineColors:['#34495E']
+                    },
+                    {
+                      label:'Disk',
+                      data:[{% for e in equip_performance %}
+                    {{e.disk_use}}, {% endfor %}],
+                      backgroundColor: "rgba(52,73,94,0.4)",
+                      lineColors:['#34495E']
+                    }]
+                },
+                options : {
+       scales: {
+         yAxes: [{
+           scaleLabel: {
+             display: true,
+             labelString: 'BPS'
+           }
+         }]
+       }
+     }
+              });
+              
+              </script>
+            </body>
+            <!-- <div id="graph_area" style="width:100%; height:200px;"></div> -->
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- /graph area -->
+    <div class="col-md-12 col-sm-12 col-xs-12">
+      <div class="x_panel">
+        <div class="x_title">
+          <h2>장비 성능 검색</h2>
+          <ul class="nav navbar-right panel_toolbox">
+          </ul>
+          <div class="clearfix"></div>
+        </div>
+        <div class="x_content">
+
+          <form class="form-horizontal form-label-left">
+
+            <div class="form-group">
+              <label class="col-sm-1 control-label">장비 IP</label>
+              <div class="col-sm-3">
+                <input type="text" class="form-control">
+              </div>
+              <label class="col-sm-1 control-label">수집 시간</label>
+              <div class="col-sm-3">
+                <input type="text" class="form-control">
+              </div>
+              <div class="form-group"></div>
+              <label class="col-sm-1 control-label">성능</label>
+              <div class="col-sm-3">
+                <div class="btn-group">
+                  <select class="form-control" style="width: 158px">
+                    <option>전체</option>
+                    <option>CPU</option>
+                    <option>Memory</option>
+                    <option>Disk</option>
+                  </select>
+                </div>
+              </div>
+              <button type="submit" class="btn btn-default middle" style="float: right;">검색</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+      <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel">
+          <div class="x_title">
+            <h2>장비 성능 리스트</h2>
+            <ul class="nav navbar-right panel_toolbox">
+              </li>
+            </ul>
+            <div class="clearfix"></div>
+          </div>
+          <div id="grid"></div>
+          <script>
+            var grid = new tui.Grid({
+              el: document.getElementById('grid'),
+              bodyHeight: 500,
+              scrollX: false,
+              scrollY: false,
+              minBodyHeight: 30,
+              pageOptions: {
+                useClient: true,
+                perPage: 10
+              },
+              align:'center',
+              columns: [
+                {
+                  header: '성능번호',
+                  name: 'eq_pe_num',
+                  filter: {
+                    type: 'text',
+                    operator: 'OR'
+                  }
+                },
+                {
+                  header: '장비IP',
+                  name: 'eq_ip',
+                  filter: {
+                    type: 'text',
+                    operator: 'OR'
+                  }
+                },
+                {
+                  header: '수집시간',
+                  name: 'record_date',
+                  filter: {
+                  type: 'date',
+                  format: 'yyyy.MM.dd'
+                }
+                },
+                {
+                  header: 'CPU 사용률',
+                  name: 'cpu_use',
+                  filter: 'number',
+                },
+                {
+                  header: 'Memory 사용률',
+                  name: 'memory_use',
+                  filter: 'number',
+                },
+                {
+                  header: 'Disk 사용률',
+                  name: 'disk_use',
+                  filter: 'number',
+                },
+              ]
+            });
+
+          var device_performanceData = [  
+          {% for e in equip_performance %}
+            {
+              eq_pe_num:"{{e.eq_pe_num}}",
+              eq_ip:"{{e.eq_ip}}",
+              record_date:"{{e.record_date}}",
+              cpu_use:"{{e.cpu_use}}",
+              memory_use:"{{e.memory_use}}",
+              disk_use:"{{e.disk_use}}"
+            },
+          {% endfor %}
+          ];
+          grid.resetData(device_performanceData);
+          </script>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+  </html>
+  {% endblock content %}
+
+  {% block javascripts %}
+  {{ block.super }}
+  <!-- morris.js -->
+  <script src="/static/vendors/raphael/raphael.min.js"></script>
+  <script src="/static/vendors/morris.js/morris.min.js"></script>
+  <script src="/static/vendors/Chart.js/dist/Chart.min.js"></script>
+
+  <script src="/static/vendors/datatables.net/js/jquery.dataTables.min.js"></script>
+  <script src="/static/vendors/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+  <script src="/static/vendors/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
+  <script src="/static/vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js"></script>
+  <script src="/static/vendors/datatables.net-buttons/js/buttons.flash.min.js"></script>
+  <script src="/static/vendors/datatables.net-buttons/js/buttons.html5.min.js"></script>
+  <script src="/static/vendors/datatables.net-buttons/js/buttons.print.min.js"></script>
+  <script src="/static/vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js"></script>
+  <script src="/static/vendors/datatables.net-keytable/js/dataTables.keyTable.min.js"></script>
+  <script src="/static/vendors/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
+  <script src="/static/vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js"></script>
+  <script src="/static/vendors/datatables.net-scroller/js/dataTables.scroller.min.js"></script>
+  <script src="/static/vendors/jszip/dist/jszip.min.js"></script>
+  <script src="/static/vendors/pdfmake/build/pdfmake.min.js"></script>
+  <script src="/static/vendors/pdfmake/build/vfs_fonts.js"></script>
+  {% endblock javascripts %}

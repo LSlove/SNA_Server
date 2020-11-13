@@ -1,0 +1,190 @@
+<!-- 장비관리 -->
+{% extends "app/base_site.html" %}
+
+{% block title %} Morris JS {% endblock title %}
+
+{% block stylesheets %}
+{{ block.super }}
+{% endblock stylesheets %}
+
+{% block content %}
+<div class="right_col" role="main">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel">
+            <div class="x_title">
+                <h2>사용자 정보 수정</h2>
+                <ul class="nav navbar-right panel_toolbox">
+                </ul>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+               <form class="form-horizontal form-label-left" method="post" action="/user_code/user_change/{{user_code.user_id}}/">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label class="col-sm-1 control-label">USER_ID</label>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control" style="width: 200px" name="user_id" id="user_id" value="{{user_code.user_id}}"> 
+                        </div>
+                        <label class="col-sm-1 control-label">PassWord</label>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control" style="width: 200px" name="password" id="password" value="{{user_code.password}}">
+                        </div>
+
+                        <div class="form-group">
+                        </div>
+                        <label class="col-sm-1 control-label">이름</label>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control" style="width: 200px" name="username" id="username" value="{{user_code.username}}">
+                        </div>
+                        <label class="col-sm-1 control-label">담당 / 팀</label>
+                        <div class="col-sm-3">
+                            <div class="btn-group">
+                                <select onchange="categoryChange(this)" class="form-control" style="width: 130px" name="charge" id="charge">
+                                    <optgroup label="현재 담당">
+                                    <option>{{user_code.charge}}</option>
+                                </optgroup>
+                                <optgroup label="변경 담당">
+
+                                    <option value="a">서울</option>
+                                    <option value="b">경기</option>
+                                    <option value="c">대전/충청</option>
+                                    <option value="d">대구/경상</option>
+                                    <option value="e">광주/전라</option>
+                                    <option value="f">강원</option>
+                                    <option value="g">제주</option>
+                                    </optgroup>
+
+                                </select>
+                                
+                            </div>
+                            </script>
+                            <div class="btn-group">
+                                <!-- <select class="form-control" style="width: 130px" name="team" id="good">
+                         
+                                    <optgroup label="현재 팀">
+                                    <option>{{user_code.team}}</option>
+                                    </optgroup>
+                                    <optgroup label="변경 팀">
+                                    <option></option>
+                                    <option>B</option>
+                                    <option>C</option>
+                                </optgroup>
+                                </select> -->
+                                <select id="good" class="form-control" style="width: 130px" name="team">
+                                    <option>팀</option>
+                                    </select>
+                                <script>
+                                    function categoryChange(e) {
+      var good_a = ["서울프로세스"];
+      var good_b = ["경기네트워크"];
+      var good_c = ["대전/충청온라인"];
+      var good_d = ["대구/경상닷컴"];
+      var good_e = ["광주/전라넷"];
+      var good_f = ["강원도메인"];
+      var good_g = ["제주소프트"];
+      var target = document.getElementById("good");
+     
+      if(e.value == "a") var d = good_a;
+      else if(e.value == "b") var d = good_b;
+      else if(e.value == "c") var d = good_c;
+      else if(e.value == "d") var d = good_d;
+      else if(e.value == "e") var d = good_e;
+      else if(e.value == "f") var d = good_f;
+      else if(e.value == "g") var d = good_g;
+     
+      target.options.length = 0;
+     
+      for (x in d) {
+        var opt = document.createElement("option");
+        opt.value = d[x];
+        opt.innerHTML = d[x];
+        target.appendChild(opt);
+      } 
+    } </script>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                        </div>
+                        <label class="col-sm-1 control-label">직급</label>
+                        <div class="col-sm-3">
+                            <div class="btn-group">
+                                <select class="form-control" style="width: 100px" name="position" id="position">
+                                    <optgroup label="현재 직급">
+                                    <option>{{user_code.position}}</option>
+                                    </optgroup>
+                                    <optgroup label="변경 직급">
+                                    <option>사원</option>
+                                    <option>대리</option>
+                                    <option>과장</option>
+                                    <option>부장</option>
+                                </optgroup>
+                                </select>
+                            </div>
+                        </div>
+                        <label class="col-sm-1 control-label">운영자 등급</label>
+                        <div class="col-sm-3">
+                            <div class="btn-group">
+                                <select class="form-control" style="width: 100px" name="grade" id="grade"> 
+                                    <optgroup label="현재 등급">
+                                    <option>{{user_code.grade}}</option> 
+                                    </optgroup>
+                                    <optgroup label="변경 등급">
+                                    <option>Admin</option>
+                                    <option>관리자</option>
+                                    <option>운영자</option>
+                                    </optgroup>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                        </div>
+                        <label class="col-sm-1 control-label">전화번호</label>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control" style="width: 200px" name="phone" id="phone" value="{{user_code.phone}}">
+                        </div>
+                        <label class="col-sm-1 control-label">이메일</label>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control"style="width: 200px" name="email" id="email" value="{{user_code.email}}">
+                        </div>
+                        <div class="form-group">
+                        </div>
+                        <label class="col-sm-1 control-label">입사일</label>
+                        <!-- <div class="col-sm-3"> -->
+                            <fieldset>
+                                <div class="control-group">
+                                  <div class="controls">
+                                    <div class="col-md-11 xdisplay_inputx form-group has-feedback">
+                                      <input type="text" class="form-control has-feedback-left" id="single_cal4" placeholder="First Name" aria-describedby="inputSuccess2Status4" style="width: 200px"
+                                       name = "date_joined" value="{{user_code.date_joined}}">
+                                      <span class="fa fa-calendar-o form-control-feedback left" aria-hidden="true"></span>
+                                      <span id="inputSuccess2Status4" class="sr-only">(success)</span>
+                                    </div>
+                                  <!-- </div> -->
+                                </div>
+                              </fieldset>
+                        </div>
+
+                        <!-- <div class="form-group"> -->
+                            <!-- <div class="col-md-10 col-md-offset-10"> -->
+                                <button type="submit" class="btn btn-default middle" style="float: right;">취소</button>
+                                <a href="app/user"><button type="submit" class="btn btn-default middle" style="float: right;" id="complete">확인</button></a>
+                              <!-- <button type="submit" class="btn btn-default">확인</button>
+                              <button type="submit" class="btn btn-default">취소</button> -->
+                            <!-- </div> -->
+                          <!-- </div> -->
+                        </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
+
+{% block javascripts %}
+{{ block.super }}
+<!-- morris.js -->
+<script src="/static/vendors/raphael/raphael.min.js"></script>
+<script src="/static/vendors/morris.js/morris.min.js"></script>
+<script src="/static/vendors/Chart.js/dist/Chart.min.js"></script>
+{% endblock javascripts %}

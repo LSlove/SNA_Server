@@ -1,0 +1,219 @@
+<!-- 회원정보 -->
+{% extends "app/base_site.html" %}
+
+{% block title %} Morris JS {% endblock title %}
+
+{% block stylesheets %}
+{{ block.super }}
+<link href="/static/vendors/datatables.net-bs/css/dataTables.bootstrap.min.css" rel="stylesheet">
+<link href="/static/vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css" rel="stylesheet">
+<link href="/static/vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css" rel="stylesheet">
+<link href="/static/vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css" rel="stylesheet">
+<link href="/static/vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css" rel="stylesheet">
+{% endblock stylesheets %}
+
+{% block content %}
+
+<div class="right_col" role="main">
+  <div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+      <div class="x_panel">
+        <div class="x_title">
+
+          <h2>사용자 검색</h2>
+          <ul class="nav navbar-right panel_toolbox">
+          </ul>
+          <div class="clearfix"></div>
+        </div>
+        <div class="x_content">
+
+          <form class="form-horizontal form-label-left" >
+            <!-- {% csrf_token %} -->
+            <div class="form-group">
+              <label class="col-sm-1 control-label">이름</label>
+              <div class="col-sm-3">
+                <input type="text" class="form-control" name="value" id="value" onkeyup="filter()">
+              </div>
+              <div class="form-group">
+
+                <label class="col-sm-1 control-label">운영자 등급</label>
+                <div class="btn-group">
+                  <select class="form-control">
+                    <option>등급</option>
+                    <option>Admin</option>
+                    <option>관리자</option>
+                    <option>운영자</option>
+                  </select>
+                </div>
+              </div>
+              <label class="col-sm-1 control-label">담당 / 팀</label>
+              <div class="col-sm-3">
+                <div class="btn-group">
+                  <select class="form-control">
+                    <option>담당</option>
+                    <option> </option>
+                    <option> </option>
+                    <option> </option>
+                  </select>
+                </div>
+                <div class="btn-group">
+                  <select class="form-control">
+                    <option>팀</option>
+                    <option> </option>
+                    <option> </option>
+                    <option> </option>
+                  </select>
+                </div>
+              </div>
+              <button type="submit" class="btn btn-default middle" style="float: right;" name="btnSearch" id="btnSearch">검색</button>
+            </div>
+          </form>
+        </div>
+      </div> 
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+      <div class="x_panel">
+        <div class="x_title">
+          <h2>사용자 리스트</small></h2>
+          <ul class="nav navbar-right panel_toolbox">
+            <div class="form-group">
+         <div class="container text-right"> 
+              <a href="/user_register"> <button type="submit" class="btn btn-default">등록</button></a>
+              <a href="/user_code/user_change/" class="btn btn-default" id="modify">수정</a>
+              <a href="/user_code/user_delete/" class="btn btn-default" id="delete">삭제</a>
+             
+            </div>
+          </ul>
+          <div class="clearfix"></div>
+        </div>      
+       
+        <div id="grid"></div>
+        <script>
+        
+        var grid = new tui.Grid({
+            el: document.getElementById('grid'),
+            bodyHeight: 500,
+            scrollX: false,
+            scrollY: false,
+            minBodyHeight: 30,
+            rowHeaders: ['checkbox'],
+            pageOptions: {
+              useClient: true,
+              perPage: 10
+            },
+           
+
+            columns: [
+              // {
+              //   header: 'ID',
+              //   name: 'id',    
+                       
+              // },
+              {
+                header: 'USER_ID',
+                name: 'user_id',
+                width: 150,
+              },
+              {
+                header: 'PassWord',
+                name: 'password',
+                width: 150,
+
+      
+              },
+              {
+                header: '이름',
+                name: 'username',
+                filter: { type: 'text', showApplyBtn: true, showClearBtn: true }
+              },
+              {
+                header: '담당',
+                name: 'charge',
+                filter: 'select'
+              },
+              {
+                header: '팀',
+                name: 'team',
+                filter: 'select'
+              },
+              {
+                header: '직급',
+                name: 'position',
+                filter: 'select'
+              },
+              {
+                header: '운영자 등급',
+                name: 'grade',
+                filter: 'select'
+              },
+              {
+                header: '전화번호',
+                name: 'phone',
+                width: 150,
+              },
+              {
+                header: '이메일',
+                name: 'email',
+                width: 150,
+              },
+              {
+                header: '입사일',
+                name: 'date_joined',
+                filter: {
+                  type: 'text',
+                  format: 'yyyy.MM.dd'
+                }
+              },
+              {
+                header: '최근 로그인 일시',
+                name: 'last_login',
+                filter: {
+                  type: 'text',
+                  format: 'date'
+                }
+              },
+              
+            ]
+          });
+          var userData = [  
+          {% for u in user_code %} 
+            {
+              // id:"{{a.id}}",
+              username: "{{u.username}}",
+              user_id: "{{u.user_id}}",
+              password: "{{u.password}}",
+              charge:"{{u.charge}}",
+              team:"{{u.team}}",
+              position:"{{u.position}}",
+              grade:"{{u.grade}}",
+              phone:"{{u.phone}}",
+              email:"{{u.email}}",
+              date_joined:"{{u.date_joined}}",
+              last_login:"{{u.last_login}}"
+            },
+          {% endfor %}
+          ];
+          grid.resetData(userData);
+
+          grid.on('check', (ev) => {
+             console.log(grid.getRow(ev.rowKey).user_id);
+             selected_id = grid.getRow(ev.rowKey).user_id 
+             console.log("selected_id : " , selected_id)
+             var loc = "/user_code/user_change/" + grid.getRow(ev.rowKey).user_id; 
+             document.getElementById("modify").href=loc;
+             var loc = "/user_code/user_delete/" + grid.getRow(ev.rowKey).user_id; 
+             document.getElementById("delete").href=loc;
+          });   
+        </script>
+      </div>
+      {% endblock content %}
+      {% block javascripts %}
+      {{ block.super }}
+      <!-- morris.js -->
+      <script src="/static/vendors/raphael/raphael.min.js"></script>
+      <script src="/static/vendors/morris.js/morris.min.js"></script>
+      <script src="/static/vendors/Chart.js/dist/Chart.min.js"></script>
+      {% endblock javascripts %}

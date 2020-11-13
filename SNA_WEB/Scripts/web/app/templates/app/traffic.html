@@ -1,0 +1,352 @@
+{% extends "app/base_site.html" %}
+
+{% block title %} Morris JS {% endblock title %}
+
+{% block stylesheets %}
+{{ block.super }}
+{% endblock stylesheets %}
+
+{% block content %}
+<div class="right_col" role="main">
+  <div class="row">
+
+
+    <div class="col-md-12 col-sm-12 col-xs-12">
+      <div class="x_panel">
+        <div class="x_title">
+          <h2>Traffic 이력</h2>
+          <ul class="nav navbar-right panel_toolbox">
+            <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+            </li>
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i
+                  class="fa fa-wrench"></i></a>
+              <ul class="dropdown-menu" role="menu">
+                <li><a href="#">Settings 1</a>
+                </li>
+                <li><a href="#">Settings 2</a>
+                </li>
+              </ul>
+            </li>
+            <li><a class="close-link"><i class="fa fa-close"></i></a>
+            </li>
+          </ul>
+          <div class="clearfix"></div>
+        </div>
+        <div class="col-md-12">
+          <div class="x_content2">
+            <!-- <div id="graph_area" style="width:100%; height:200px;"></div> -->
+            <!doctype html>
+            <html>
+
+            <head>
+              <script type="text/javascript"
+                src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.min.js"></script>
+              <script type="text/javascript"
+                src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js"></script>
+            </head>
+
+            <body>
+              <canvas id="myChart2" width="1180" height="152"></canvas>
+              <script>
+                let data = [{% for a in day_traffic %}{ { a.now_in_traffic } }, {% endfor %} ];
+                var context = document.getElementById("myChart2").getContext("2d");
+                var myChart2 = new Chart(context, {
+                  // type: "bar ",
+                  type: "line",
+                  data: {
+                    labels: [" ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
+                    // labels: [{% for a in auth_user %} "{{a.id}}", {% endfor %}],
+                    datasets: [{
+                      label: "Traffic",
+                      data: data,
+                      backgroundColor: [
+                        "rgba(255, 99, 132, 0.2)",
+                        "rgba(54, 162, 235, 0.2)",
+                        "rgba(255, 206, 86, 0.2)",
+                        "rgba(75, 192, 192, 0.2)",
+                        "rgba(153, 102, 255, 0.2)",
+                        "rgba(255, 159, 64, 0.2)"
+                      ],
+                      borderColor: [
+                        "rgba(255,99,132,1)",
+                        "rgba(54, 162, 235, 1)",
+                        "rgba(255, 206, 86, 1)",
+                        "rgba(75, 192, 192, 1)",
+                        "rgba(153, 102, 255, 1)",
+                        "rgba(255, 159, 64, 1)"
+                      ],
+                      borderWidth: 1,
+                      fill: "start",
+                    }]
+                  },
+                  options: {
+                    scales: {
+                      yAxes: [{
+                        ticks: {
+                          beginAtZero: true
+                        }
+                      }]
+                    },
+                    elements: {
+                      line: {
+                        // tension: 0,
+                        // no smooth
+                      }
+                    }
+                  }
+                });
+                let flag = setInterval(() => {
+                  let newData = data[0],
+                    oldData = data.slice(1);
+                  oldData.push(newData)
+                  data = [].concat(oldData);
+                  myChart2.data.datasets[0].data = data;
+                  myChart2.update(0);
+                }, 1000);
+              </script>
+              </section>
+              </section>
+            </body>
+
+            </html>
+            </script>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- /graph area -->
+    <div class="col-md-12 col-sm-12 col-xs-12">
+      <div class="x_panel">
+        <div class="x_title">
+          <h2>Traffic 이력 검색</h2>
+          <ul class="nav navbar-right panel_toolbox">
+          </ul>
+          <div class="clearfix"></div>
+        </div>
+        <div class="x_content">
+
+          <form class="form-horizontal form-label-left">
+
+            <div class="form-group">
+              <label class="col-sm-1 control-label">기간</label>
+              <div class="col-sm-3">
+                <div class="btn-group">
+                  <select onchange="categoryChange(this)" class="form-control" style="width: 200px">
+                    <option>기간</option>
+                    <option value="a">일간</option>
+                    <option value="b">주간</option>
+                    <option>월간</option>
+                    <option>년간</option>
+                  </select>
+                </div>
+              </div>
+              <button type="submit" class="btn btn-default">검색</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-12 col-sm-12 col-xs-12">
+    <div class="x_panel">
+      <div class="x_title">
+        <h2>Traffic 이력 리스트</h2>
+        <ul class="nav navbar-right panel_toolbox">
+          </li>
+        </ul>
+        <div class="clearfix"></div>
+      </div>
+      <div id="grid"></div>
+      <script id="good">
+        var grid = new tui.Grid({
+          el: document.getElementById('grid'),
+          bodyHeight: 500,
+          scrollX: false,
+          scrollY: false,
+          minBodyHeight: 30,
+          // rowHeaders: ['checkbox'],
+          pageOptions: {
+            useClient: true,
+            perPage: 10
+          },
+          header: {
+            height: 160,
+            complexColumns: [
+              {
+                header: '트래픽',
+                name: 'mergeColumn1',
+                childNames: ['present1', 'avg1', 'max1']
+              },
+              {
+                header: '패킷',
+                name: 'mergeColumn3',
+                childNames: ['present2', 'avg2', 'max2']
+              },
+              {
+                header: 'IN',
+                name: 'mergeColumn2',
+                childNames: ['mergeColumn1', 'mergeColumn3']
+              },
+              {
+                header: '트래픽',
+                name: 'mergeColumn4',
+                childNames: ['present3', 'avg3', 'max3']
+              },
+              {
+                header: '패킷',
+                name: 'mergeColumn5',
+                childNames: ['present4', 'avg4', 'max4']
+              },
+              {
+                header: 'OUT',
+                name: 'mergeColumn6',
+                childNames: ['mergeColumn4', 'mergeColumn5']
+              }
+            ]
+          },
+          columns: [
+            {
+              header: '시간',
+              name: 'time',
+              filter: {
+                type: 'date',
+                format: 'yyyy.MM.dd'
+              }
+            },
+            {
+              header: '장애',
+              name: 'performance',
+              filter: 'select'
+            },
+            {
+              header: '인터페이스',
+              name: 'interface',
+              filter: 'select'
+            },
+            {
+              header: '통계시각',
+              name: 'stats_time',
+              filter: {
+                type: 'date',
+                format: 'yyyy.MM.dd'
+              }
+            },
+            {
+              header: '현재',
+              name: 'present1',
+            },
+            {
+              header: '평균',
+              name: 'avg1',
+            },
+            {
+              header: '최대',
+              name: 'max1',
+            },
+            {
+              header: '현재',
+              name: 'present2',
+            },
+            {
+              header: '평균',
+              name: 'avg2',
+            },
+            {
+              header: '최대',
+              name: 'max2',
+            },
+            {
+              header: '현재',
+              name: 'present3',
+            },
+            {
+              header: '평균',
+              name: 'avg3',
+            },
+            {
+              header: '최대',
+              name: 'max3',
+            },
+            {
+              header: '현재',
+              name: 'present4',
+            },
+            {
+              header: '평균',
+              name: 'avg4',
+            },
+            {
+              header: '최대',
+              name: 'max4',
+            },
+
+          ]
+        });
+
+        function categoryChange(e) {
+          var good_a = [
+            {% for d in day_statistics %}
+        {
+          time: "{{d.num}}"
+        },
+        {% endfor %}
+          ];
+        var good_a = [grid.resetData(good_a)];
+
+        if (e.value == "a") var d = good_a;
+        else if (e.value == "b") var d = good_b;
+
+        target.options.length = 0;
+
+        for (x in d) {
+          var opt = document.getElementById('grid');
+          opt.value = d[x];
+          //  opt.innerHTML = d[x];
+          target.appendChild(opt);
+        } 
+       }
+
+
+
+          // var dayData  = [  
+          // {% for d in day_statistics %} 
+          //   {
+          //     time: "{{d.num}}"
+          //   },
+          // {% endfor %}
+          // ];
+          // grid.resetData(dayData);
+
+      </script>
+    </div>
+  </div>
+</div>
+
+
+
+</html>
+{% endblock content %}
+
+{% block javascripts %}
+{{ block.super }}
+<!-- morris.js -->
+<script src="/static/vendors/raphael/raphael.min.js"></script>
+<script src="/static/vendors/morris.js/morris.min.js"></script>
+<script src="/static/vendors/Chart.js/dist/Chart.min.js"></script>
+
+<script src="/static/vendors/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="/static/vendors/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+<script src="/static/vendors/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
+<script src="/static/vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js"></script>
+<script src="/static/vendors/datatables.net-buttons/js/buttons.flash.min.js"></script>
+<script src="/static/vendors/datatables.net-buttons/js/buttons.html5.min.js"></script>
+<script src="/static/vendors/datatables.net-buttons/js/buttons.print.min.js"></script>
+<script src="/static/vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js"></script>
+<script src="/static/vendors/datatables.net-keytable/js/dataTables.keyTable.min.js"></script>
+<script src="/static/vendors/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
+<script src="/static/vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js"></script>
+<script src="/static/vendors/datatables.net-scroller/js/dataTables.scroller.min.js"></script>
+<script src="/static/vendors/jszip/dist/jszip.min.js"></script>
+<script src="/static/vendors/pdfmake/build/pdfmake.min.js"></script>
+<script src="/static/vendors/pdfmake/build/vfs_fonts.js"></script>
+{% endblock javascripts %}

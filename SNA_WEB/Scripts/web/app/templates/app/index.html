@@ -1,0 +1,50 @@
+{% extends "app/base_site.html" %}
+
+{% block title %} Login {% endblock title %}
+
+{% block stylesheets %}
+  {{ block.super }}
+  <!-- Animate.css -->
+  <link href="/static/vendors/animate.css/animate.min.css" rel="stylesheet">
+{% endblock stylesheets %}
+
+{% block body_class %}login{% endblock body_class %}
+
+{% block body %}
+  <div>
+    <a class="hiddenanchor" id="signup"></a>
+    <a class="hiddenanchor" id="signin"></a>
+
+    <div class="login_wrapper">
+      <div class="animate form login_form">
+        <section class="login_content">
+          <form method="post" action="/">
+            {% csrf_token %}
+            <h1>Login Form</h1>
+            <div>
+              <input type="text" class="form-control" placeholder="ID" required="" name="user_id" id="user_id" />
+            </div>
+            <div>
+              <input type="password" class="form-control" placeholder="Password" required="" name="password" id="password"/>
+            </div>
+            <div>
+              <button type="submit" class="btn btn-default middle" style="float: right;">확인</button>
+            </div>
+
+            <div class="clearfix"></div>
+
+            <div class="separator">
+              <p class="change_link">New to site?
+                <a href="/signup" class="to_register"> Create Account </a>
+              </p>
+
+              <div class="clearfix"></div>
+              <br />
+            </div>
+          </form>
+        </section>
+      </div>
+    </div>
+  </div>
+{% endblock body %}
+

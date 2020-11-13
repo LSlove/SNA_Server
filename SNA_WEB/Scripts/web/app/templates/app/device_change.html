@@ -1,0 +1,235 @@
+<!-- 장비관리 -->
+{% extends "app/base_site.html" %}
+
+{% block title %} Morris JS {% endblock title %}
+
+{% block stylesheets %}
+{{ block.super }}
+{% endblock stylesheets %}
+
+{% block content %}
+<div class="right_col" role="main">
+    <div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel">
+            <div class="x_title">
+                <h2>장비 정보 수정</h2>
+                <ul class="nav navbar-right panel_toolbox">
+                </ul>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+
+                <form class="form-horizontal form-label-left" method="post" action="/equipment/device_change/{{equipment.eq_ip}}">
+                    {% csrf_token %}
+
+                    <div class="form-group">
+                        <label class="col-sm-1 control-label">장비 주소</label>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control" style="width: 158px" name="eq_ip" id="eq_ip" value="{{equipment.eq_ip}}">
+                        </div>
+                        <label class="col-sm-1 control-label">장비 주소</label>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control" style="width: 325px" name="eq_ip" id="eq_ip" value="{{equipment.eq_ip}}">
+                        </div>
+                        <label class="col-sm-1 control-label">장비 명</label>
+                        <div class="col-sm-3">
+                            <div class="btn-group">
+                                <select class="form-control" style="width: 158px" name="name" id="name">
+                                    <optgroup label="현재 장비 명">
+                                        <option>{{equipment.name}}</option>
+                                    </optgroup>
+                                    <optgroup label="변경 장비 명">
+                                    <option> </option>
+                                    <option> </option>
+                                    <option> </option>
+                                </optgroup>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                        </div>
+                        <label class="col-sm-1 control-label">벤더 / 모델</label>
+                        <div class="col-sm-3">
+                            <div class="btn-group">
+                                <select class="form-control" style="width: 160px" name="vendor" id="vendor">
+                                    <optgroup label="현재 벤더">
+                                        <option>{{equipment.vendor}}</option>
+                                    </optgroup>
+                                    <optgroup label="변경 벤더">
+                                    <option> </option>
+                                    <option> </option>
+                                    <option> </option>
+                                </optgroup>
+                                </select>
+                            </div>
+                            <div class="btn-group">
+                                <select class="form-control" style="width: 160px" name="model" id="model">
+                                    <optgroup label="현재 모델">
+                                        <option>{{equipment.model}}</option>
+                                    </optgroup>
+                                    <optgroup label="변경 모델">
+                                    <option> </option>
+                                    <option> </option>
+                                    <option> </option>
+                                </optgroup>
+                                </select>
+                            </div>
+                        </div>
+                        <label class="col-sm-1 control-label">담당 / 팀</label>
+                        <div class="col-sm-3">
+                            <div class="btn-group">
+                                <select class="form-control" style="width: 160px" name="manage" id="manage">
+                                    <optgroup label="현재 담당">
+                                        <option>{{equipment.manage}}</option>
+                                    </optgroup>
+                                    <optgroup label="변경 담당">
+                                    <option> </option>
+                                    <option> </option>
+                                    <option> </option>
+                                </optgroup>
+                                </select>
+                            </div>
+                            <div class="btn-group">
+                                <select class="form-control" style="width: 160px" name="team" id="team">
+                                    <optgroup label="현재 팀">
+                                        <option>{{equipment.team}}</option>
+                                    </optgroup>
+                                    <optgroup label="변경 팀">
+                                    <option> </option>
+                                    <option> </option>
+                                    <option> </option>
+                                </optgroup>
+                                </select>
+                            </div>    
+                        </div>
+                        <div class="form-group">
+                        </div>
+                        <label class="col-sm-1 control-label">장비 설명</label>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control" name="descr" id="descr" value="{{equipment.descr}}">
+                        </div>
+                        <label class="col-sm-1 control-label">장비 위치</label>
+                        <div class="col-sm-3">
+                            <select class="form-control" style="width: 325px" name="location" id="location">
+                                <optgroup label="현재 장비 위치">
+                                    <option>{{equipment.location}}</option>
+                                </optgroup>
+                                <optgroup label="변경 장비 위치">
+                                <option> </option>
+                                <option> </option>
+                                <option> </option>
+                            </optgroup>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-default middle" style="float: right;" id="complete">등록</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel">
+            <div class="x_title">
+                <h2>SNMP 정보</h2>
+                <ul class="nav navbar-right panel_toolbox">
+                </ul>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+
+                <form class="form-horizontal form-label-left">
+
+                    <div class="form-group">
+                        <label class="col-sm-1 control-label">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp SNMP
+                            수집여부</label>
+                        <div class="col-sm-3">
+                            <div class="btn-group">
+                                <select class="form-control" style="width: 158px">
+                                    <option>수집 여부</option>
+                                    <option>예</option>
+                                    <option>아니요</option>
+                                </select>
+                            </div>
+                        </div>
+                        <label class="col-sm-1 control-label">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp SNMP
+                            버전정보</label>
+                        <div class="col-sm-3">
+                            <input type="radio" name="options" id="option1" autocomplete="off" checked> Version 1
+                            &nbsp&nbsp
+                            <input type="radio" name="options" id="option1" autocomplete="off" checked> Version 2
+                            &nbsp&nbsp
+                            <input type="radio" name="options" id="option1" autocomplete="off" checked> Version 3
+                        </div>
+                        <div class="form-group">
+                        </div>
+                        <label class="col-sm-1 control-label">SNMP Read Community</label>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control" style="width: 158px">
+                        </div>
+                        <label class="col-sm-1 control-label">SNMP Write Community</label>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control" style="width: 158px">
+                        </div>
+                        <div class="form-group">
+                        </div>
+                        <label class="col-sm-1 control-label">&nbsp&nbsp SNMP 폴링 포트번호</label>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control" style="width: 158px">
+                        </div>
+
+
+                        <label class="col-sm-1 control-label">&nbsp&nbsp SNMP Trap 포트번호</label>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control" style="width: 158px">
+                        </div>
+                        <div class="form-group">
+                        </div>
+                        <label class="col-sm-1 control-label">장비명</label>
+                        <div class="col-sm-1">
+                            <input type="text" class="form-control" style="width: 158px">                       
+                        </div>
+                        <div class="col-sm-1">                  
+                            <button type="submit" class="btn btn-default">자동</button>
+                        </div>
+                        <div class="form-group">
+                        </div>
+
+                        <label class="col-sm-1 control-label">장비 설명</label>
+                        <div class="col-sm-1">
+                            <!-- <input type="text" class="form-control" aria-rowindex="30px">           -->
+                            <textarea cols="50" rows="5"></textarea>             
+                        </div>
+                        <div class="form-group">
+                        </div>
+    
+                        <button type="submit" class="btn btn-default middle" style="float: right;">등록</button>
+                            </div>
+
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+{% endblock content %}
+
+{% block javascripts %}
+{{ block.super }}
+<!-- morris.js -->
+<script src="/static/vendors/raphael/raphael.min.js"></script>
+<script src="/static/vendors/morris.js/morris.min.js"></script>
+<script src="/static/vendors/Chart.js/dist/Chart.min.js"></script>
+{% endblock javascripts %}

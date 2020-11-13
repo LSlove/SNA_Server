@@ -1,0 +1,23 @@
+{% extends "app/base_site.html" %}
+
+{% block title %} Login {% endblock title %}
+
+{% block stylesheets %}
+  {{ block.super }}
+  <!-- Animate.css -->
+  <link href="/static/vendors/animate.css/animate.min.css" rel="stylesheet">
+{% endblock stylesheets %}
+
+{% block body_class %}login{% endblock body_class %}
+
+{% block body %}
+  <script>
+      var r = confirm(" {% if request.session.user_id %}{{ request.session.user_id }}님{% endif %} 환영합니다.");
+if (r == true) {
+    document.location.href="/dashboard";
+} else {
+    document.location.href="/dashboard";
+}
+  </script>
+{% endblock body %}
+
