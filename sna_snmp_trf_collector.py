@@ -10,6 +10,7 @@ import traceback
 from sna_snmp import SnaSnmp as snmp
 from trf_collector_sql import TrfCollectorSql as sqlExec
 import SNA_config as cfg
+import sna_errorEvent
 
 import threading
 import time
@@ -223,6 +224,8 @@ def main():
             print('\n')
             mysql_exec.save_snmp_trf_list(save_trf_data)
             mysql_exec.commit()
+
+            sna_errorEvent.main()#에러 파일 실행
         except Exception as e:
             print(e)
             continue

@@ -26,6 +26,43 @@ class TrfCollectorSql(SnaMySql) :
             print (rows)
             return rows
 
+    def select_snmp_traffic(self,cur_time):
+        try:
+            sql="""
+                select eq_ip,if_index,in_traffic
+                from snmp_traffic
+                where tr_date = '"""+cur_time+"""'
+                order by eq_ip,if_index
+            """
+
+            rows = self.exec_sql(sql)
+
+            return rows
+
+        except Exception as e:
+            print("database is not exist")
+            rows = '%s' % str(traceback.print_exc())
+            print (rows)
+            return rows
+
+    def select_interface_speed(self):
+        try:
+            sql="""
+                select eq_ip,if_index,speed
+                from interface
+                order by eq_ip,if_index
+            """
+
+            rows = self.exec_sql(sql)
+
+            return rows
+
+        except Exception as e:
+            print("database is not exist")
+            rows = '%s' % str(traceback.print_exc())
+            print (rows)
+            return rows
+
     def insert_day_traffic_list(self):
         try:
             sql = """
@@ -254,3 +291,35 @@ class TrfCollectorSql(SnaMySql) :
             print (msg)
 
             return -1
+    
+    def save_snmp_error_list(self, error_dict):
+        row_count = -1
+        try :
+            # sql = """
+            #     insert into event
+            #     (type, grade, ev_contents, occur,
+            #     count,eq_ip,if_index)
+            #     values
+            #     (%(TYPE)s,%(GRADE)s,%(EV_CON)s,%(OCCUR)s,
+            #      %(COUNT)s, %(IP)s, %(INDEX)s)
+            # """
+
+            print(error_dict)
+
+            sql = """
+                insert into event
+                (type, grade, ev_contents, occur,
+                count,eq_ip,if_index)
+                values
+                (%(TYPE)s,%(GRADE)s,%(EV_CON)s,%(OCCUR)s,
+                 %(COUNT)s, %(IP)s, %(INDEX)s)
+            """
+            
+            row_count = self.exec_many_Sna(sql, error_dict)
+            return row_count
+
+        except Exception as e :
+            print ("save_error_data() : Exception Occur -  ", e)
+            msg = '%s' % str(traceback.print_exc())
+            print (msg)
+            return row_count

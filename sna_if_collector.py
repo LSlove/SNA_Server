@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 import json
 import os
 from datetime import datetime
@@ -149,17 +148,17 @@ class SnaIfTrfCollector(object):
                         tmp_dict['IF_NAME'] = cur_data['VALUE']
 
                     if (cur_data['TRF_TYPE'] == cfg.SNMP_COLLECT_OIDS_DICT['ifPhysAddress']) :
-                        if len(cur_data['VALUE']) > 0 :
-                            mibBuilder = builder.MibBuilder()
-                            MacAddress, = mibBuilder.importSymbols('SNMPv2-TC','MacAddress')
-                            print (">>>> ", cur_data['VALUE'])
+                        # if len(cur_data['VALUE']) > 0 :
+                        #     mibBuilder = builder.MibBuilder()
+                        #     MacAddress, = mibBuilder.importSymbols('SNMPv2-TC','MacAddress')
+                        #     print (">>>> ", cur_data['VALUE'])
 
-                            print(">>>>>>> ",binascii.hexlify(cur_data['VALUE'].encode()).decode())
-                            macAdd =  MacAddress(hexValue=binascii.hexlify(cur_data['VALUE'].encode()).decode().zfill(12))
-                            print("!!>>>> MAC : ", macAdd)
-                        else:
-                            print("ADDR NOT EXIST")
-                            tmp_dict['MAC_ADDR'] = ''   
+                        #     print(">>>>>>> ",binascii.hexlify(cur_data['VALUE'].encode()).decode())
+                        #     macAdd =  MacAddress(hexValue=binascii.hexlify(cur_data['VALUE'].encode()).decode().zfill(12))
+                        #     print("!!>>>> MAC : ", macAdd)
+                        # else:
+                        #     print("ADDR NOT EXIST")
+                        #     tmp_dict['MAC_ADDR'] = ''   
                         #print(">>>>>> mac addr1 : ",binascii.hexlify(cur_data['VALUE'].encode()).decode(ascii))
                         # if len(cur_data['VALUE']) > 0 :
                         #     print(">> cur_data = ", cur_data, type(cur_data['VALUE']))
