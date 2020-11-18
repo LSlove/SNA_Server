@@ -6,9 +6,12 @@ import base64
 
 from Sna_mysql import SnaMySql
 
+
+
 class TrfCollectorSql(SnaMySql) :
     def __init__(self,  host, user, watchword, db_name, port=3306, charset='utf-8', unicode=True):
         SnaMySql.__init__(self,  host, user, watchword, db_name, port, charset, unicode)
+        self.sql_count = 0
 
     def select_equip_target_list(self):
         try:
@@ -291,31 +294,22 @@ class TrfCollectorSql(SnaMySql) :
             print (msg)
 
             return -1
-    
-    def save_snmp_error_list(self, error_dict):
+
+    def update_snmp_error_list(self, error_dict):
         row_count = -1
         try :
-            # sql = """
-            #     insert into event
-            #     (type, grade, ev_contents, occur,
-            #     count,eq_ip,if_index)
-            #     values
-            #     (%(TYPE)s,%(GRADE)s,%(EV_CON)s,%(OCCUR)s,
-            #      %(COUNT)s, %(IP)s, %(INDEX)s)
-            # """
-
-            print(error_dict)
-
             sql = """
-                insert into event
-                (type, grade, ev_contents, occur,
-                count,eq_ip,if_index)
-                values
-                (%(TYPE)s,%(GRADE)s,%(EV_CON)s,%(OCCUR)s,
-                 %(COUNT)s, %(IP)s, %(INDEX)s)
+                update event
+                set type=%(TYPE)s, 
+                grade=%(GRADE)s,
+                ev_contents=%(EV_CON)s,
+                occur=%(OCCUR)s,
+                count=count+1
+                where eq_ip = %(IP)s and if_index = %(INDEX)s
             """
             
             row_count = self.exec_many_Sna(sql, error_dict)
+            print("updatecomplte")
             return row_count
 
         except Exception as e :
@@ -323,3 +317,60 @@ class TrfCollectorSql(SnaMySql) :
             msg = '%s' % str(traceback.print_exc())
             print (msg)
             return row_count
+    
+    def save_snmp_error_list(self, error_dict):
+        row_count = -1
+        try :
+            # sql = """
+            #     replace into event
+            #     (type, grade, ev_contents, occur,
+            #     count,id,eq_ip,if_index)
+            #     values
+            #     (%(TYPE)s,%(GRADE)s,%(EV_CON)s,%(OCCUR)s,
+            #     %(COUNT)s,%(ID)s,%(IP)s, %(INDEX)s)
+            # """
+
+            # foo = error_dict['192.168.0.101-2'].get('EV_CON')
+            # print("foo = ",foo)
+            
+            sql = """
+                insert into event
+                (type, grade, ev_contents, occur,
+                count,id,eq_ip,if_index)
+                values
+                (%(TYPE)s,%(GRADE)s,%(EV_CON)s,%(OCCUR)s,
+                %(COUNT)s,%(ID)s,%(IP)s, %(INDEX)s)
+                on duplicate key update
+                count = count+1,type = (%(TYPE)s),grade=%(GRADE)s,occur=(%(OCCUR)s),
+                ev_contents=(%(EV_CON)s),id=(%(id)s)
+            """
+
+            #ev_contents='"""+ error_dict.get('EV_CON') +"""'
+
+            row_count = self.exec_many_Sna(sql, error_dict)
+            print("savecomplte")
+            return row_count
+
+        except Exception as e :
+            print ("save_error_data() : Exception Occur -  ", e)
+            msg = '%s' % str(traceback.print_exc())
+            print (msg)
+            return row_count
+
+    def error_target_delete(self,ip,index):
+        try:
+            sql = """
+                delete
+                from event
+                where eq_ip='"""+ip+"""' and if_index='"""+str(index)+"""'
+                """
+
+            rows = self.exec_sql(sql)
+
+            return rows
+
+        except Exception as e:
+            print("database is not exist")
+            rows = '%s' % str(traceback.print_exc())
+            print (rows)
+            return rows

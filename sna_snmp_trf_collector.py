@@ -225,13 +225,12 @@ def main():
             mysql_exec.save_snmp_trf_list(save_trf_data)
             mysql_exec.commit()
 
-            sna_errorEvent.main()#에러 파일 실행
+            
         except Exception as e:
             print(e)
             continue
-
-    threading.Timer(60, main).start()
-            
+    sna_errorEvent.main()#에러 파일 실행    
+    threading.Timer(60, main).start()    
 #-------------------------------------------------------------------
     # prev_snmp_data = trf_collector.load(cfg.SNMP_DATA_FILENAME)
     # save_snmp_data = trf_collector.make_save_data(cfg.SNMP_TARGET, snmp_data, prev_snmp_data)
