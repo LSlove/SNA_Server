@@ -40,7 +40,6 @@ class ErrorCollector(object):
         err_dict = {}
         key = ('{0}-{1}'.format(eq_ip, if_index))
         try:
-            #print("start")
             tmp_dict['TYPE'] = 'traffic_over'
             tmp_dict['GRADE'] = grade
             tmp_dict['EV_CON'] = "Traffic Over Value : "+ev_con
@@ -73,7 +72,6 @@ def main():
         return
 
 #---------------------------------------------------------------------
-    #datetime.fromtimestamp(int(cur_timestamp - (cur_timestamp % cfg.TRF_PERIOD)))
     now = time.time()
     cur_now =  datetime.fromtimestamp(int(now-(now%60)))
 

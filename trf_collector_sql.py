@@ -77,12 +77,12 @@ class TrfCollectorSql(SnaMySql) :
                 SELECT 
                 eq_ip,if_index, FROM_UNIXTIME((UNIX_TIMESTAMP(DATE_ADD(DATE_FORMAT(tr_date , '%Y-%m-%d %H:%i:%S'), Interval 5 Minute)) -
 				(UNIX_TIMESTAMP(date_add(DATE_FORMAT(tr_date, '%Y-%m-%d %H:%i:%S'), Interval 5 Minute)) % 300))) tr_date,
-                ROUND(in_traffic) now_in_traffic,ROUND(out_traffic) now_out_traffic,
-                ROUND(in_packet) now_in_packet,ROUND(out_packet) now_out_packet,
-                ROUND(MAX(in_traffic),2) max_in_traffic,ROUND(MAX(out_traffic),2) max_out_traffic,
-                ROUND(MAX(in_packet),2) max_in_packet,ROUND(MAX(out_packet),2) max_out_packet,
-                ROUND(AVG(in_traffic),2) avg_in_traffic,ROUND(AVG(out_traffic),2) avg_out_traffic,
-                ROUND(AVG(in_packet),2) avg_in_packet,ROUND(AVG(out_packet),2) avg_out_packet
+                ROUND(in_traffic) now_in_traffic,ROUND(in_packet) now_in_packet,
+                ROUND(out_traffic) now_out_traffic,ROUND(out_packet) now_out_packet,
+                ROUND(MAX(in_traffic),2) max_in_traffic,ROUND(MAX(in_packet),2) max_in_packet,
+                ROUND(MAX(out_traffic),2) max_out_traffic,ROUND(MAX(out_packet),2) max_out_packet,
+                ROUND(AVG(in_traffic),2) avg_in_traffic,ROUND(AVG(in_packet),2) avg_in_packet,
+                ROUND(AVG(out_traffic),2) avg_out_traffic,ROUND(AVG(out_packet),2) avg_out_packet
                 from snmp_traffic
                 where (select max(st_date) from day_statistics) < tr_date or (select count(st_date) from day_statistics) = 0
                 group by DATE(tr_date),FLOOR(HOUR(tr_date)),FLOOR(MINUTE(tr_date)/5) ,eq_ip ,if_index;      
@@ -108,12 +108,12 @@ class TrfCollectorSql(SnaMySql) :
                 SELECT 
                 eq_ip,if_index, FROM_UNIXTIME((UNIX_TIMESTAMP(DATE_ADD(DATE_FORMAT(st_date , '%Y-%m-%d %H:%i:%S'), Interval 30 Minute)) -
 				(UNIX_TIMESTAMP(date_add(DATE_FORMAT(st_date, '%Y-%m-%d %H:%i:%S'), Interval 30 Minute)) % 1800))) st_date,
-                ROUND(now_in_traffic) now_in_traffic,ROUND(now_out_traffic) now_out_traffic,
-                ROUND(now_in_packet) now_in_packet,ROUND(now_out_packet) now_out_packet,
-                ROUND(MAX(max_in_traffic),2) max_in_traffic,ROUND(MAX(max_out_traffic),2) max_out_traffic,
-                ROUND(MAX(max_in_packet),2) max_in_packet,ROUND(MAX(max_out_packet),2) max_out_packet,
-                ROUND(AVG(avg_in_traffic),2) avg_in_traffic,ROUND(AVG(avg_out_traffic),2) avg_out_traffic,
-                ROUND(AVG(avg_in_packet),2) avg_in_packet,ROUND(AVG(avg_out_packet),2) avg_out_packet
+                ROUND(now_in_traffic) now_in_traffic,ROUND(now_in_packet) now_in_packet,
+                ROUND(now_out_traffic) now_out_packet,ROUND(now_out_packet) now_out_packet,
+                ROUND(MAX(max_in_traffic),2) max_in_traffic,ROUND(MAX(max_in_packet),2) max_in_packet,
+                ROUND(MAX(max_out_traffic),2) max_out_traffic,ROUND(MAX(max_out_packet),2) max_out_packet,
+                ROUND(AVG(avg_in_traffic),2) avg_in_traffic,ROUND(AVG(avg_in_packet),2) avg_in_packet,
+                ROUND(AVG(avg_out_traffic),2) avg_out_traffic,ROUND(AVG(avg_out_packet),2) avg_out_packet
                 from day_statistics ds
                 where (select max(st_date) from week_statistics) < ds.st_date or (select count(st_date) from week_statistics) = 0
                 group by DATE(st_date),FLOOR(HOUR(st_date)),FLOOR(MINUTE(st_date)/30) ,eq_ip ,if_index;    
@@ -139,12 +139,12 @@ class TrfCollectorSql(SnaMySql) :
                 SELECT 
                 eq_ip,if_index, FROM_UNIXTIME((UNIX_TIMESTAMP(DATE_ADD(DATE_FORMAT(st_date , '%Y-%m-%d %H:%i:%S'), Interval 1 Hour)) -
 				(UNIX_TIMESTAMP(date_add(DATE_FORMAT(st_date, '%Y-%m-%d %H:%i:%S'), Interval 1 Hour)) % 3600))) st_date,
-                ROUND(now_in_traffic) now_in_traffic,ROUND(now_out_traffic) now_out_traffic,
-                ROUND(now_in_packet) now_in_packet,ROUND(now_out_packet) now_out_packet,
-                ROUND(MAX(max_in_traffic),2) max_in_traffic,ROUND(MAX(max_out_traffic),2) max_out_traffic,
-                ROUND(MAX(max_in_packet),2) max_in_packet,ROUND(MAX(max_out_packet),2) max_out_packet,
-                ROUND(AVG(avg_in_traffic),2) avg_in_traffic,ROUND(AVG(avg_out_traffic),2) avg_out_traffic,
-                ROUND(AVG(avg_in_packet),2) avg_in_packet,ROUND(AVG(avg_out_packet),2) avg_out_packet
+                ROUND(now_in_traffic) now_in_traffic,ROUND(now_in_packet) now_in_packet,
+                ROUND(now_out_traffic) now_out_packet,ROUND(now_out_packet) now_out_packet,
+                ROUND(MAX(max_in_traffic),2) max_in_traffic,ROUND(MAX(max_in_packet),2) max_in_packet,
+                ROUND(MAX(max_out_traffic),2) max_out_traffic,ROUND(MAX(max_out_packet),2) max_out_packet,
+                ROUND(AVG(avg_in_traffic),2) avg_in_traffic,ROUND(AVG(avg_in_packet),2) avg_in_packet,
+                ROUND(AVG(avg_out_traffic),2) avg_out_traffic,ROUND(AVG(avg_out_packet),2) avg_out_packet
                 from week_statistics ws
                 where (select max(st_date) from month_statistics) < ws.st_date or (select count(st_date) from month_statistics) = 0
                 group by DATE(st_date),FLOOR(HOUR(st_date)/1),MINUTE(st_date) ,eq_ip ,if_index;    
@@ -170,12 +170,12 @@ class TrfCollectorSql(SnaMySql) :
                 SELECT 
                 eq_ip,if_index, FROM_UNIXTIME((UNIX_TIMESTAMP(DATE_ADD(DATE_FORMAT(st_date , '%Y-%m-%d %H:%i:%S'), Interval 2 Hour)) -
 				(UNIX_TIMESTAMP(date_add(DATE_FORMAT(st_date, '%Y-%m-%d %H:%i:%S'), Interval 2 Hour)) % 7200))) st_date,
-                ROUND(now_in_traffic) now_in_traffic,ROUND(now_out_traffic) now_out_traffic,
-                ROUND(now_in_packet) now_in_packet,ROUND(now_out_packet) now_out_packet,
-                ROUND(MAX(max_in_traffic),2) max_in_traffic,ROUND(MAX(max_out_traffic),2) max_out_traffic,
-                ROUND(MAX(max_in_packet),2) max_in_packet,ROUND(MAX(max_out_packet),2) max_out_packet,
-                ROUND(AVG(avg_in_traffic),2) avg_in_traffic,ROUND(AVG(avg_out_traffic),2) avg_out_traffic,
-                ROUND(AVG(avg_in_packet),2) avg_in_packet,ROUND(AVG(avg_out_packet),2) avg_out_packet
+                ROUND(now_in_traffic) now_in_traffic,ROUND(now_in_packet) now_in_packet,
+                ROUND(now_out_traffic) now_out_packet,ROUND(now_out_packet) now_out_packet,
+                ROUND(MAX(max_in_traffic),2) max_in_traffic,ROUND(MAX(max_in_packet),2) max_in_packet,
+                ROUND(MAX(max_out_traffic),2) max_out_traffic,ROUND(MAX(max_out_packet),2) max_out_packet,
+                ROUND(AVG(avg_in_traffic),2) avg_in_traffic,ROUND(AVG(avg_in_packet),2) avg_in_packet,
+                ROUND(AVG(avg_out_traffic),2) avg_out_traffic,ROUND(AVG(avg_out_packet),2) avg_out_packet
                 from month_statistics ms
                 where ((select max(st_date) from year_statistics) < ms.st_date) or (select count(st_date) from year_statistics) = 0
                 group by DATE(st_date),FLOOR(HOUR(st_date)/2),MINUTE(st_date) ,eq_ip ,if_index;    
