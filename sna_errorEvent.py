@@ -11,24 +11,19 @@ import SNA_config as cfg
 import threading
 import time
 
-warning_grade = 0.34
-minor_grade = 0.45
-major_grade = 0.6
-critical_grade = 0.75
-
 class ErrorCollector(object):
     def __init__(self):
         self.snmp = snmp()
 
     def errorSwitch(self,max,cur):
         grade = ''
-        if((max*critical_grade)<cur):
+        if((max*cfg.critical_grade)<cur):
             grade = 'Critical'
-        elif((max*major_grade)<cur):
+        elif((max*cfg.major_grade)<cur):
             grade = 'Major'
-        elif((max*minor_grade)<cur):
+        elif((max*cfg.minor_grade)<cur):
             grade = 'Minor'
-        elif((max*warning_grade)<cur):
+        elif((max*cfg.warning_grade)<cur):
             grade = 'Warning'
         else:
             grade='Normal'
@@ -97,21 +92,21 @@ def main():
                     max_speed = int(if_speed[targets][target])/10
                     cur_speed = int(snmptraffic[targets][target])
                     error_Result = errorEvent.errorSwitch(max_speed,cur_speed)
-
+                    print(error_Result)
 
                     if(error_Result!='Normal'):
                         save_error = errorEvent.save_error_data(snmptraffic[targets][0],snmptraffic[targets][1],snmptraffic[targets][2],error_Result,cur_now)
-                        print(type(save_error))
-                        
                         mysql_exec.save_snmp_error_list(save_error)
-                        
+                        mysql_exec.commit()
+                        print("error save complete")
                     else:
                         mysql_exec.error_target_delete(snmptraffic[targets][0],snmptraffic[targets][1])
+                        mysql_exec.commit()
+                        print("error delete complete")
                 else:
                     print("check Interface DB",if_speed[targets][0])
     except Exception as e:
         print(e)
-        mysql_exec.commit()
     print("End ErrorData")
                     
 

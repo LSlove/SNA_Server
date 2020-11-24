@@ -12,6 +12,7 @@ SNMP_COMMUNITY='smart123'
 SNMP_PORT='161'
 
 HIGH_SPEED = 1000000
+DEFAULT_SPEED = 100000000
 
 SNMP_COLLECT_OIDS=[
     #Information
@@ -62,5 +63,5 @@ SNMP_COUNT_OID = '1.3.6.1.2.1.2.1.0'
 SNMP_DATA_DIR = './data'
 SNMP_DATA_FILENAME = 'if_data.dml'
 
-#수집 주기 (1분)
+#수집 주기
 TRF_PERIOD = 0

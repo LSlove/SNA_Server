@@ -342,7 +342,7 @@ class TrfCollectorSql(SnaMySql) :
                 %(COUNT)s,%(ID)s,%(IP)s, %(INDEX)s)
                 on duplicate key update
                 count = count+1,type = (%(TYPE)s),grade=%(GRADE)s,occur=(%(OCCUR)s),
-                ev_contents=(%(EV_CON)s),id=(%(id)s)
+                ev_contents=(%(EV_CON)s),id=(%(ID)s)
             """
 
             #ev_contents='"""+ error_dict.get('EV_CON') +"""'

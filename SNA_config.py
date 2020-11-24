@@ -11,6 +11,11 @@ DB_NAME='SNA'
 SNMP_COMMUNITY='smart123'
 SNMP_PORT='161'
 
+warning_grade = 0.3
+minor_grade = 0.45
+major_grade = 0.6
+critical_grade = 0.75
+
 SNMP_COLLECT_OIDS=[
     #Equipment
     # '.1.3.6.1.2.1.4.20.1.1',# ipAdEntAddr

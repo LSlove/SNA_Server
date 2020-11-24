@@ -180,7 +180,10 @@ class SnaIfTrfCollector(object):
                         tmp_dict['IF_DESCR'] = cur_data['VALUE']
 
                     if (cur_data['TRF_TYPE'] == cfg.SNMP_COLLECT_OIDS_DICT['ifHighSpeed']) :
-                        tmp_dict['IF_SPEED'] = int(cur_data['VALUE']) * cfg.HIGH_SPEED
+                        if cur_data['VALUE'] == 0 :
+                            tmp_dict['IF_SPEED'] = cfg.DEFAULT_SPEED
+                        else :
+                            tmp_dict['IF_SPEED'] = int(cur_data['VALUE']) * cfg.HIGH_SPEED
 
                     if (cur_data['TRF_TYPE'] == cfg.SNMP_COLLECT_OIDS_DICT['ifAdminStatus']) :
                         tmp_dict['ADMIN_STATUS'] = int(cur_data['VALUE'])

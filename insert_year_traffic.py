@@ -4,7 +4,7 @@ import SNA_config as cfg
 def main():
     mysql_exec = sqlExec(cfg.DB_HOST, cfg.DB_USER, cfg.DB_PASSWD, cfg.DB_NAME)
     if mysql_exec.conn_db is False:
-        print("Can't connect day list database")
+        print("Can't connect year list database")
         return
     else:
         mysql_exec.insert_year_traffic_list()

@@ -152,38 +152,3 @@ class SnaSnmp(object):
             real_value = (self.COUNTER64_MAX_VALUE - prev_value) + curr_value
 
         return real_value
-
-
-# if __name__ == "__main__":
-#     sna_snmp = SnaSnmp()
-
-
-
-
-#     its = sna_snmp.get_bulk_auto('192.168.0.8', 
-#             ['.1.3.6.1.2.1.2.2.1.1',        # ifIndex
-#             '.1.3.6.1.2.1.31.1.1.1.4',      # ifName
-#             '.1.3.6.1.2.1.2.2.1.2',         # ifDescr
-#             '.1.3.6.1.2.1.31.1.1.1.15',     # ifHighSpeed
-
-#             '1.3.6.1.2.1.31.1.1.1.6',       # ifHCInOctets  
-#             '1.3.6.1.2.1.31.1.1.1.7',       # ifHCInUcastPkts
-#             '1.3.6.1.2.1.31.1.1.1.8',       # ifHCInMulticastPkts
-#             '1.3.6.1.2.1.31.1.1.1.9',       # ifHCInBroadcastPkts
-
-#             '1.3.6.1.2.1.31.1.1.1.10 ',     # ifHCOutOctets
-#             '1.3.6.1.2.1.31.1.1.1.11',      # ifHCOutUcastPkts
-#             '1.3.6.1.2.1.31.1.1.1.12',      # ifHCOutMulticastPkts
-#             '1.3.6.1.2.1.31.1.1.1.13'],     # ifHCOutBroadcastPkts
-
-#             hlapi.CommunityData('public'), '1.3.6.1.2.1.2.1.0'
-#     )
-
-#     if its is not None:
-#         print(its)
-#         print('\n')
-
-#         for it in its:
-#             for k, v in it.items():
-#                 print("{0}={1}".format(k, v))
-#             print('')
