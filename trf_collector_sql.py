@@ -48,6 +48,25 @@ class TrfCollectorSql(SnaMySql) :
             print (rows)
             return rows
 
+    def select_snmp_FinalData(self,cur_time):
+        try:
+            sql="""
+                select eq_ip,if_index,abnormal
+                from FinalData
+                where tr_date = '"""+cur_time+"""'
+                order by eq_ip,if_index
+            """
+
+            rows = self.exec_sql(sql)
+
+            return rows
+
+        except Exception as e:
+            print("database is not exist")
+            rows = '%s' % str(traceback.print_exc())
+            print (rows)
+            return rows
+
     def select_interface_speed(self):
         try:
             sql="""

@@ -30,12 +30,12 @@ class ErrorCollector(object):
         
         return grade
 
-    def save_error_data(self,eq_ip,if_index,ev_con,grade,cur_now):
+    def save_error_data(self,tr_type,eq_ip,if_index,ev_con,grade,cur_now):
         tmp_dict = {}
         err_dict = {}
         key = ('{0}-{1}'.format(eq_ip, if_index))
         try:
-            tmp_dict['TYPE'] = 'traffic_over'
+            tmp_dict['TYPE'] = tr_type
             tmp_dict['GRADE'] = grade
             tmp_dict['EV_CON'] = "Traffic Over Value : "+ev_con
             tmp_dict['OCCUR'] = cur_now
@@ -56,6 +56,7 @@ class ErrorCollector(object):
         print(err_dict)
 
         return err_dict.values()
+    
          
 def main():
     print('START Sna_Error_collector Process!!!')
@@ -72,10 +73,26 @@ def main():
 
     try:
         snmptraffic = mysql_exec.select_snmp_traffic(str(cur_now))
+        snmpfinaldata = mysql_exec.select_snmp_FinalData(str(cur_now))
         print("snmp_traffic = ",snmptraffic)
         if_speed =  mysql_exec.select_interface_speed()
         print("if_speed = ", if_speed)
         errorEvent = ErrorCollector()
+
+        for targets in range(len(snmpfinaldata)):
+            for target in range(len(snmpfinaldata(targets))):
+                if(target == 3):
+                    if(snmpfinaldata[targets][target] == 1):
+                        tr_type='Abnormal error'
+                        error_Result = 'Critical'
+                        save_error = errorEvent.save_error_data(tr_type,snmpfinaldata[targets][0],snmpfinaldata[targets][1],snmptraffic[targets][2],error_Result,cur_now)
+                        mysql_exec.save_snmp_error_list(save_error)
+                        mysql_exec.commit()
+                    else :
+                        mysql_exec.error_target_delete(snmpfinaldata[targets][0],snmpfinaldata[targets][1])
+                        mysql_exec.commit()
+
+
 
         for targets in range(len(if_speed)):
             cheak_count = 0
@@ -95,7 +112,8 @@ def main():
                     print(error_Result)
 
                     if(error_Result!='Normal'):
-                        save_error = errorEvent.save_error_data(snmptraffic[targets][0],snmptraffic[targets][1],snmptraffic[targets][2],error_Result,cur_now)
+                        tr_type = "traffic error"
+                        save_error = errorEvent.save_error_data(tr_type,snmptraffic[targets][0],snmptraffic[targets][1],snmptraffic[targets][2],error_Result,cur_now)
                         mysql_exec.save_snmp_error_list(save_error)
                         mysql_exec.commit()
                         print("error save complete")
